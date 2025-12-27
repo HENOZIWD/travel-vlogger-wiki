@@ -1,28 +1,26 @@
 import './App.css';
-import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
+import { css } from '@emotion/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WorldMap } from './components/worldMap';
+import { MarkerList } from './components/MarkerList';
+
+const queryClient = new QueryClient();
 
 function App() {
-  const position = {
-    lat: 52.54992,
-    lng: 10.00678,
-  };
-
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <Map
-        style={{
-          width: '100vw',
-          height: '100vh',
-        }}
-        defaultCenter={position}
-        defaultZoom={10}
-        streetViewControl={false}
-        mapId="DEMO_MAP_ID"
-        mapTypeControl={false}
+    <QueryClientProvider client={queryClient}>
+      <div css={css`
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+        `}
       >
-        <AdvancedMarker position={position} />
-      </Map>
-    </APIProvider>
+        <WorldMap>
+          <MarkerList />
+        </WorldMap>
+      </div>
+    </QueryClientProvider>
   );
 }
 
