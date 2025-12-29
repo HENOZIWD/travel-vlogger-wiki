@@ -6,11 +6,16 @@ import { WorldMap } from './components/WorldMap';
 import { ContentRegisterForm } from './components/ContentRegisterForm';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { useContentRegisterFormState } from './hooks/useContentRegisterFormState';
+import { AdvancedMarker } from '@vis.gl/react-google-maps';
 
 const queryClient = new QueryClient();
 
 function App() {
-  const { isRegistering, setIsRegistering } = useContentRegisterFormState();
+  const {
+    isRegistering,
+    setIsRegistering,
+    position,
+  } = useContentRegisterFormState();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -29,6 +34,9 @@ function App() {
           : null}
         <WorldMap>
           <MarkerList />
+          {isRegistering
+            ? <AdvancedMarker position={position} />
+            : null}
           {!isRegistering
             ? (
               <button
