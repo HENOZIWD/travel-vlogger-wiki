@@ -19,21 +19,36 @@ export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
       position={data.positions[0]}
       ref={ref}
     >
-      <img
-        src={data.channel.thumbnailDefault}
-        alt={data.channel.title}
-        srcSet={`
+      <div css={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `}
+      >
+        <img
+          src={data.channel.thumbnailDefault}
+          alt={data.channel.title}
+          srcSet={`
           ${data.channel.thumbnailDefault} 88w,
           ${data.channel.thumbnailMedium} 240w,
           ${data.channel.thumbnailHigh} 800w
         `}
-        sizes="2.5rem"
-        css={css`
+          sizes="2.5rem"
+          css={css`
           width: 2.5rem;
           height: 2.5rem;
           border-radius: 9999px;
         `}
-      />
+        />
+        <div css={css`
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-shadow: #000 0 0 0.5rem;
+          `}
+        >
+          {data.channel.title}
+        </div>
+      </div>
     </AdvancedMarker>
   );
 };
