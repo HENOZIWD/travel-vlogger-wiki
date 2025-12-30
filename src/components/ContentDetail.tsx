@@ -61,13 +61,17 @@ export const ContentDetail = () => {
                       thumbnailMedium={data.channel.thumbnailMedium}
                       thumbnailHigh={data.channel.thumbnailHigh}
                     />
-                    <a
-                      href={`https://youtube.com/${data.channel.customUrl}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {data.channel.title}
-                    </a>
+                    {data.channel.customUrl
+                      ? (
+                        <a
+                          href={`https://youtube.com/${data.channel.customUrl}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {data.channel.title}
+                        </a>
+                      )
+                      : <div>{data.channel.title}</div>}
                   </div>
                   <div css={css`
                       display: flex;
