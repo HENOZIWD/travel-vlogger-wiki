@@ -42,6 +42,18 @@ export default defineConfig([
       'no-console': 'error',
       '@stylistic/jsx-first-prop-new-line': ['error', 'multiprop'],
       'object-shorthand': ['error', 'always'],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "args": "all",
+          "argsIgnorePattern": "^_",
+          "caughtErrors": "all",
+          "caughtErrorsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "ignoreRestSiblings": true
+        }
+      ]
     },
   },
 ])

@@ -20,6 +20,7 @@ export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
 
   const handleMarkerClick = () => {
     const newParams = new URLSearchParams(searchParams);
+    newParams.delete('register');
     newParams.set('content', data.id);
     setSearchParams(newParams);
   };

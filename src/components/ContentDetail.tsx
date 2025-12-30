@@ -17,9 +17,11 @@ export const ContentDetail = () => {
   });
 
   const handleCloseDetail = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.delete('content');
-    setSearchParams(newParams);
+    setSearchParams((prev) => {
+      const nextParams = new URLSearchParams(prev);
+      nextParams.delete('content');
+      return nextParams;
+    });
   };
 
   if (!contentId) return null;

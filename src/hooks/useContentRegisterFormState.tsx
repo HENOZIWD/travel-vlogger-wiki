@@ -1,12 +1,10 @@
 import { atom, useAtom } from 'jotai';
 import { getVideoIdFromYoutubeURL } from '../utils/url';
 
-const isRegisteringAtom = atom<boolean>(false);
 const urlAtom = atom<string>('');
 const positionAtom = atom<google.maps.LatLngLiteral>();
 
 export const useContentRegisterFormState = () => {
-  const [isRegistering, setIsRegistering] = useAtom(isRegisteringAtom);
   const [url, setUrl] = useAtom(urlAtom);
   const [position, setPosition] = useAtom(positionAtom);
 
@@ -27,8 +25,6 @@ export const useContentRegisterFormState = () => {
   const isValid = Object.values(errors).every((err) => err === null);
 
   return {
-    isRegistering,
-    setIsRegistering,
     resetFormState,
     errors,
     isValid,

@@ -7,10 +7,10 @@ import { useMutation } from '@tanstack/react-query';
 import { registerContent } from '../apis/registerContent';
 import { useContentRegisterFormState } from '../hooks/useContentRegisterFormState';
 import { Drawer } from './Drawer';
+import { useSearchParams } from 'react-router';
 
 export const ContentRegisterForm = () => {
   const {
-    setIsRegistering,
     url,
     setUrl,
     position,
@@ -19,11 +19,14 @@ export const ContentRegisterForm = () => {
     isValid,
   } = useContentRegisterFormState();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const isRegistering = searchParams.get('register') === 'true';
+
   const mutation = useMutation({
     mutationFn: registerContent,
     onSuccess: () => {
-      setIsRegistering(false);
-      resetFormState();
+      closeForm();
     },
   });
 
@@ -41,12 +44,19 @@ export const ContentRegisterForm = () => {
     setUrl(e.currentTarget.value);
   };
 
-  const handleCloseForm = () => {
-    setIsRegistering(false);
+  const closeForm = () => {
+    setSearchParams((prev) => {
+      const nextParams = new URLSearchParams(prev);
+      nextParams.delete('register');
+      return nextParams;
+    });
+    resetFormState();
   };
 
+  if (!isRegistering) return null;
+
   return (
-    <Drawer onClose={handleCloseForm}>
+    <Drawer onClose={closeForm}>
       <VideoPreview />
       <div css={css`
           padding: 1rem;

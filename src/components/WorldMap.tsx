@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { APIProvider, Map, type MapMouseEvent } from '@vis.gl/react-google-maps';
 import type { ReactNode } from 'react';
 import { useContentRegisterFormState } from '../hooks/useContentRegisterFormState';
+import { useSearchParams } from 'react-router';
 
 const defaultPosition = {
   lat: 36,
@@ -11,7 +12,10 @@ const defaultPosition = {
 interface WorldMapProps { children?: ReactNode }
 
 export const WorldMap = ({ children }: WorldMapProps) => {
-  const { isRegistering, setPosition } = useContentRegisterFormState();
+  const { setPosition } = useContentRegisterFormState();
+  const [searchParams] = useSearchParams();
+
+  const isRegistering = searchParams.get('register') === 'true';
 
   const handleClick = (event: MapMouseEvent) => {
     const position = event.detail.latLng;
