@@ -3,6 +3,8 @@ import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { useCallback } from 'react';
 import type { Marker as MarkerData } from '../utils/marker';
 import { css } from '@emotion/react';
+import { useSearchParams } from 'react-router';
+import { ChannelThumbnail } from './ChannelThumbnail';
 
 interface MarkerProps {
   data: MarkerData;
@@ -14,31 +16,37 @@ export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
     setMarkerRef(marker, data.id),
   [setMarkerRef, data.id]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleMarkerClick = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('content', data.id);
+    setSearchParams(newParams);
+  };
+
   return (
     <AdvancedMarker
       position={data.positions[0]}
       ref={ref}
     >
-      <div css={css`
+      <div
+        css={css`
           display: flex;
           flex-direction: column;
           align-items: center;
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.125);
+          }
         `}
+        onClick={handleMarkerClick}
       >
-        <img
-          src={data.channel.thumbnailDefault}
-          alt={data.channel.title}
-          srcSet={`
-          ${data.channel.thumbnailDefault} 88w,
-          ${data.channel.thumbnailMedium} 240w,
-          ${data.channel.thumbnailHigh} 800w
-        `}
-          sizes="2.5rem"
-          css={css`
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 9999px;
-        `}
+        <ChannelThumbnail
+          title={data.channel.title}
+          thumbnailDefault={data.channel.thumbnailDefault}
+          thumbnailMedium={data.channel.thumbnailMedium}
+          thumbnailHigh={data.channel.thumbnailHigh}
         />
         <div css={css`
             font-size: 0.75rem;

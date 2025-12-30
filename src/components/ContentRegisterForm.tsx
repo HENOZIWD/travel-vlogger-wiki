@@ -1,12 +1,12 @@
 import { getVideoIdFromYoutubeURL } from '../utils/url';
 import { css } from '@emotion/react';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { Cross2Icon } from '@radix-ui/react-icons';
 import { formErrorStyle, inputTextStyle, labelStyle } from '../styles';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { useMutation } from '@tanstack/react-query';
 import { registerContent } from '../apis/registerContent';
 import { useContentRegisterFormState } from '../hooks/useContentRegisterFormState';
+import { Drawer } from './Drawer';
 
 export const ContentRegisterForm = () => {
   const {
@@ -41,30 +41,12 @@ export const ContentRegisterForm = () => {
     setUrl(e.currentTarget.value);
   };
 
+  const handleCloseForm = () => {
+    setIsRegistering(false);
+  };
+
   return (
-    <div css={css`
-        width: 30rem;
-        height: 100%;
-        flex-shrink: 0;
-      `}
-    >
-      <div css={css`
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-        `}
-      >
-        <button
-          type="button"
-          onClick={() => setIsRegistering(false)}
-        >
-          <Cross2Icon css={css`
-              width: 1.25rem;
-              height: 1.25rem;
-            `}
-          />
-        </button>
-      </div>
+    <Drawer onClose={handleCloseForm}>
       <VideoPreview />
       <div css={css`
           padding: 1rem;
@@ -120,7 +102,7 @@ export const ContentRegisterForm = () => {
             )}
         </form>
       </div>
-    </div>
+    </Drawer>
   );
 };
 

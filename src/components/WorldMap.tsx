@@ -29,6 +29,7 @@ export const WorldMap = ({ children }: WorldMapProps) => {
         css={css`
             width: 100%;
             height: 100%;
+            position: relative;
           `}
         defaultCenter={defaultPosition}
         defaultZoom={10}

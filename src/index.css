@@ -29,11 +29,6 @@ body {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 button {
   border-radius: 9999px;
   border: 1px solid transparent;
@@ -53,7 +48,7 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #081017;
     background-color: #ffffff;
   }
   a:hover {

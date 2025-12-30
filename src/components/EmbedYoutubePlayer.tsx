@@ -7,6 +7,7 @@ export const EmbedYoutubePlayer = ({ id }: EmbedYoutubePlayerProps) => {
     <div css={css`
         width: 100%;
         aspect-ratio: 16/9;
+        display: flex;
       `}
     >
       <iframe

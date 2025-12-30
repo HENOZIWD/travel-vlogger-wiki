@@ -18,7 +18,8 @@
     "jotai": "^2.16.1",
     "ky": "^1.14.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "react-router": "^7.11.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
