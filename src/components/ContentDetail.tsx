@@ -5,6 +5,7 @@ import { css } from '@emotion/react';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { Drawer } from './Drawer';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
+import { formatNumber } from '../utils/format';
 
 export const ContentDetail = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,17 +86,17 @@ export const ContentDetail = () => {
                     <div>
                       업로드 날짜:
                       {' '}
-                      {data.publishedAt}
+                      {new Date(data.publishedAt).toLocaleString()}
                     </div>
                     <div>
                       조회수:
                       {' '}
-                      {data.viewCount}
+                      {formatNumber(data.viewCount)}
                     </div>
                     <div>
                       좋아요:
                       {' '}
-                      {data.likeCount}
+                      {formatNumber(data.likeCount)}
                     </div>
                   </div>
                 </div>
