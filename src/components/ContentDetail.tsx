@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { getContentDetail } from '../apis/getContentDetail';
 import { css } from '@emotion/react';
 import { ChannelThumbnail } from './ChannelThumbnail';
@@ -8,8 +8,8 @@ import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { formatNumber } from '../utils/format';
 
 export const ContentDetail = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const contentId = searchParams.get('content');
+  const { contentId } = useParams();
+  const navigate = useNavigate();
 
   const { data, isPending, isError } = useQuery({
     queryKey: ['contentDetail', contentId],
@@ -18,11 +18,7 @@ export const ContentDetail = () => {
   });
 
   const handleCloseDetail = () => {
-    setSearchParams((prev) => {
-      const nextParams = new URLSearchParams(prev);
-      nextParams.delete('content');
-      return nextParams;
-    });
+    navigate('/');
   };
 
   if (!contentId) return null;

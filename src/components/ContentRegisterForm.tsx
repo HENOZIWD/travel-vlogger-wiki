@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { registerContent } from '../apis/registerContent';
 import { useContentRegisterFormState } from '../hooks/useContentRegisterFormState';
 import { Drawer } from './Drawer';
-import { useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
 export const ContentRegisterForm = () => {
   const {
@@ -19,9 +19,7 @@ export const ContentRegisterForm = () => {
     isValid,
   } = useContentRegisterFormState();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const isRegistering = searchParams.get('register') === 'true';
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: registerContent,
@@ -45,15 +43,9 @@ export const ContentRegisterForm = () => {
   };
 
   const closeForm = () => {
-    setSearchParams((prev) => {
-      const nextParams = new URLSearchParams(prev);
-      nextParams.delete('register');
-      return nextParams;
-    });
+    navigate('/');
     resetFormState();
   };
-
-  if (!isRegistering) return null;
 
   return (
     <Drawer onClose={closeForm}>

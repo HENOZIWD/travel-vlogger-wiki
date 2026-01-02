@@ -3,7 +3,7 @@ import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { useCallback } from 'react';
 import type { Marker as MarkerData } from '../utils/marker';
 import { css } from '@emotion/react';
-import { useSearchParams } from 'react-router';
+import { Link } from 'react-router';
 import { ChannelThumbnail } from './ChannelThumbnail';
 
 interface MarkerProps {
@@ -12,36 +12,29 @@ interface MarkerProps {
 }
 
 export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
-  const ref = useCallback((marker: google.maps.marker.AdvancedMarkerElement) =>
-    setMarkerRef(marker, data.id),
-  [setMarkerRef, data.id]);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const handleMarkerClick = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.delete('register');
-    newParams.set('content', data.id);
-    setSearchParams(newParams);
-  };
+  const ref = useCallback((marker: google.maps.marker.AdvancedMarkerElement) => {
+    setMarkerRef(marker, data.id);
+  }, [setMarkerRef, data.id]);
 
   return (
     <AdvancedMarker
       position={data.positions[0]}
       ref={ref}
     >
-      <div
+      <Link
+        to={`/content/${data.id}`}
         css={css`
           display: flex;
           flex-direction: column;
           align-items: center;
           cursor: pointer;
+          color: black;
 
           &:hover {
             transform: scale(1.125);
+            color: black;
           }
         `}
-        onClick={handleMarkerClick}
       >
         <ChannelThumbnail
           title={data.channel.title}
@@ -57,7 +50,7 @@ export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
         >
           {data.channel.title}
         </div>
-      </div>
+      </Link>
     </AdvancedMarker>
   );
 };
