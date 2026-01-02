@@ -25,7 +25,7 @@ function isYoutubeURL(urlString: string) {
   }
 }
 
-const youtubeIdRegex = /(?:v=|\/v\/|\/embed\/|\/shorts\/|\/live\/|youtu\.be\/|\/e\/|watch\/|u\/\w+\/|attribution_link\?.*v%3D|watch\?.*v%3D|&v=)([a-zA-Z0-9_-]{11})(?![a-zA-Z0-9_-])/;
+const youtubeIdRegex = /(?:v=|\/v\/|\/embed\/|\/shorts\/|\/live\/|youtu\.be\/|\/e\/|watch\/|u\/\w+\/|attribution_link\?.*v(?:%3D|=)|(?:watch|%2Fwatch)(?:%3F|\?)(?:.*v(?:%3D|=))|&v=)([a-zA-Z0-9_-]{11})(?=$|[?&#\s%])/;
 
 export function getVideoIdFromYoutubeURL(url: string) {
   if (!isYoutubeURL(url)) return null;
