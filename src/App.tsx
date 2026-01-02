@@ -6,15 +6,17 @@ import { PlusIcon } from '@radix-ui/react-icons';
 import { useContentRegisterFormState } from './hooks/useContentRegisterFormState';
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { ContentDetail } from './components/ContentDetail';
-import { Link, Route, Routes, useLocation } from 'react-router';
+import { Link, Route, Routes, useLocation, useSearchParams } from 'react-router';
 import { Flex, IconButton } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 
 function App() {
   const location = useLocation();
   const { position } = useContentRegisterFormState();
+  const [searchParams] = useSearchParams();
 
   const isRegistering = location.pathname === '/register';
+  const isEditing = searchParams.get('edit') === 'true';
 
   return (
     <Flex
@@ -34,7 +36,7 @@ function App() {
       </Routes>
       <WorldMap>
         <MarkerList />
-        {isRegistering
+        {isRegistering || isEditing
           ? <AdvancedMarker position={position} />
           : null}
         {!isRegistering

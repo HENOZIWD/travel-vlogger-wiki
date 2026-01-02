@@ -1,24 +1,36 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { getContentDetail } from '../apis/getContentDetail';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { Drawer } from './Drawer';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { formatNumber } from '../utils/format';
-import { Box, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
+import { Box, Button, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
+import { ContentEditForm } from './ContentEditForm';
 
 export const ContentDetail = () => {
   const { contentId } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const isEditing = searchParams.get('edit') === 'true';
 
   const { data, isPending, isError } = useQuery({
     queryKey: ['contentDetail', contentId],
     queryFn: () => getContentDetail({ id: contentId! }),
-    enabled: !!contentId,
+    enabled: !!contentId && !isEditing,
   });
 
   const handleCloseDetail = () => {
     navigate('/');
+  };
+
+  const handleOpenContentEditForm = () => {
+    setSearchParams((prev) => {
+      const nextParams = new URLSearchParams(prev);
+      nextParams.set('edit', 'true');
+      return nextParams;
+    });
   };
 
   if (!contentId) return null;
@@ -84,6 +96,18 @@ export const ContentDetail = () => {
                     <DataList.Value>{formatNumber(data.likeCount)}</DataList.Value>
                   </DataList.Item>
                 </DataList.Root>
+                {!isEditing
+                  ? (
+                    <Flex justify="end">
+                      <Button
+                        type="button"
+                        onClick={handleOpenContentEditForm}
+                      >
+                        편집하기
+                      </Button>
+                    </Flex>
+                  )
+                  : <ContentEditForm id={contentId} />}
               </Box>
             </>
           )}
