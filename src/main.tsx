@@ -4,6 +4,7 @@ import './index.css';
 import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
+import { Theme } from '@radix-ui/themes';
 
 const queryClient = new QueryClient();
 
@@ -14,7 +15,11 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route
             path="/*"
-            element={<App />}
+            element={(
+              <Theme accentColor="jade">
+                <App />
+              </Theme>
+            )}
           />
         </Routes>
       </BrowserRouter>

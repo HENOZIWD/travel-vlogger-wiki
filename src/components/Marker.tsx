@@ -29,6 +29,10 @@ export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
           align-items: center;
           cursor: pointer;
           color: black;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-shadow: var(--gray-10) 0 0 0.5rem;
+          text-decoration: none;
 
           &:hover {
             transform: scale(1.125);
@@ -42,12 +46,7 @@ export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
           thumbnailMedium={data.channel.thumbnailMedium}
           thumbnailHigh={data.channel.thumbnailHigh}
         />
-        <div css={css`
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-shadow: #000 0 0 0.5rem;
-          `}
-        >
+        <div>
           {data.channel.title}
         </div>
       </Link>

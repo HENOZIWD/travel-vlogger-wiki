@@ -1,13 +1,13 @@
 import { getVideoIdFromYoutubeURL } from '../utils/url';
-import { css } from '@emotion/react';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { formErrorStyle, inputTextStyle, labelStyle } from '../styles';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { useMutation } from '@tanstack/react-query';
 import { registerContent } from '../apis/registerContent';
 import { useContentRegisterFormState } from '../hooks/useContentRegisterFormState';
 import { Drawer } from './Drawer';
 import { useNavigate } from 'react-router';
+import { Box, Button, Flex, Text, TextField } from '@radix-ui/themes';
+import { css } from '@emotion/react';
 
 export const ContentRegisterForm = () => {
   const {
@@ -50,46 +50,61 @@ export const ContentRegisterForm = () => {
   return (
     <Drawer onClose={closeForm}>
       <VideoPreview />
-      <div css={css`
-          padding: 1rem;
-        `}
-      >
+      <Box p="4">
         <form onSubmit={handleSubmit}>
-          <label
-            htmlFor="url"
-            css={labelStyle}
-          >
-            Youtube 링크
-            <input
+          <label htmlFor="url">
+            <Text
+              as="div"
+              size="2"
+              mb="1"
+            >
+              Youtube 링크
+            </Text>
+            <TextField.Root
+              placeholder="Youtube 링크를 입력해주세요."
+              size="3"
               type="text"
               id="url"
               onChange={handleUrlChange}
               value={url}
               aria-invalid={errors.url ? 'true' : 'false'}
-              css={inputTextStyle}
+              color={errors.url ? 'red' : undefined}
+              css={css`
+                ${errors.url ? 'border: 1px solid red;' : ''}
+              `}
             />
           </label>
           {errors.url
-            ? <div css={formErrorStyle}>{errors.url}</div>
+            ? (
+              <Text
+                as="div"
+                my="1"
+                color="red"
+              >
+                {errors.url}
+              </Text>
+            )
             : null}
-          <div css={css`
-            margin: 0.5rem 0;
-          `}
+          <Text
+            as="div"
+            my="2"
           >
             {position
               ? `위도: ${position.lat}, 경도: ${position.lng}`
               : '등록할 위치를 지도에서 선택해주세요.'}
-          </div>
+          </Text>
           {mutation.isPending
-            ? <div>등록중...</div>
+            ? <Text>등록중...</Text>
             : (
-              <>
-                <button
+              <Flex justify="end">
+                <Button
                   type="submit"
                   disabled={!isValid}
+                  variant="solid"
+                  size="2"
                 >
                   등록하기
-                </button>
+                </Button>
                 {mutation.isError
                   ? (
                     <div>
@@ -99,11 +114,11 @@ export const ContentRegisterForm = () => {
                     </div>
                   )
                   : null}
-                {mutation.isSuccess ? <div>등록이 완료되었습니다.</div> : null}
-              </>
+                {mutation.isSuccess ? <Text>등록이 완료되었습니다.</Text> : null}
+              </Flex>
             )}
         </form>
-      </div>
+      </Box>
     </Drawer>
   );
 };

@@ -1,4 +1,5 @@
-import { css } from '@emotion/react';
+import { PersonIcon } from '@radix-ui/react-icons';
+import { Avatar } from '@radix-ui/themes';
 
 interface ChannelThumbnailProps {
   title: string;
@@ -14,20 +15,23 @@ export const ChannelThumbnail = ({
   thumbnailHigh,
 }: ChannelThumbnailProps) => {
   return (
-    <img
+    <Avatar
       src={thumbnailDefault}
       alt={title}
+      fallback={(
+        <PersonIcon
+          width="1.25rem"
+          height="1.25rem"
+        />
+      )}
       srcSet={`
         ${thumbnailDefault} 88w,
         ${thumbnailMedium} 240w,
         ${thumbnailHigh} 800w
       `}
       sizes="2.5rem"
-      css={css`
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 9999px;
-      `}
+      radius="full"
+      variant="solid"
     />
   );
 };

@@ -1,15 +1,11 @@
 import { css } from '@emotion/react';
+import { AspectRatio } from '@radix-ui/themes';
 
 interface EmbedYoutubePlayerProps { id: string }
 
 export const EmbedYoutubePlayer = ({ id }: EmbedYoutubePlayerProps) => {
   return (
-    <div css={css`
-        width: 100%;
-        aspect-ratio: 16/9;
-        display: flex;
-      `}
-    >
+    <AspectRatio ratio={16 / 9}>
       <iframe
         css={css`
           border: none;
@@ -20,6 +16,6 @@ export const EmbedYoutubePlayer = ({ id }: EmbedYoutubePlayerProps) => {
         src={`https://www.youtube.com/embed/${id}?origin=http://localhost:5173`}
       >
       </iframe>
-    </div>
+    </AspectRatio>
   );
 };
