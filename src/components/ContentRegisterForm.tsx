@@ -118,7 +118,7 @@ export const ContentRegisterForm = () => {
               <Flex justify="end">
                 <Button
                   type="submit"
-                  disabled={!formState.isValid}
+                  disabled={!formState.isValid || !position}
                   variant="solid"
                   size="2"
                 >
