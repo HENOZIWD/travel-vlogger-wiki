@@ -1,15 +1,15 @@
 import { useSearchParams } from 'react-router';
-import { Button, Flex, Text } from '@radix-ui/themes';
-import { useContentRegisterFormState } from '../hooks/useContentRegisterFormState';
+import { Button, DataList, Flex, Text } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 import { editContent } from '../apis/editContent';
-import type { FormEvent } from 'react';
+import { useEffect, type FormEvent } from 'react';
+import { usePosition } from '../hooks/usePosition';
 
 interface ContentEditFormProps { id: string }
 
 export const ContentEditForm = ({ id }: ContentEditFormProps) => {
   const [_, setSearchParams] = useSearchParams();
-  const { position, resetFormState } = useContentRegisterFormState();
+  const { position, resetPosition } = usePosition();
 
   const mutation = useMutation({
     mutationFn: editContent,
@@ -17,6 +17,10 @@ export const ContentEditForm = ({ id }: ContentEditFormProps) => {
       closeForm();
     },
   });
+
+  useEffect(() => {
+    resetPosition();
+  }, [resetPosition]);
 
   const handleCloseEdit = () => {
     closeForm();
@@ -28,7 +32,6 @@ export const ContentEditForm = ({ id }: ContentEditFormProps) => {
       nextParams.delete('edit');
       return nextParams;
     });
-    resetFormState();
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -37,35 +40,49 @@ export const ContentEditForm = ({ id }: ContentEditFormProps) => {
 
     mutation.mutate({
       id,
-      positions: [position!],
+      positions: [position],
     });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Text
-        as="div"
-        my="2"
-      >
+    <Flex
+      asChild
+      direction="column"
+      gap="4"
+    >
+      <form onSubmit={handleSubmit}>
         {position
-          ? `위도: ${position.lat}, 경도: ${position.lng}`
-          : '변경할 위치를 지도에서 선택해주세요.'}
-      </Text>
-      <Flex justify="between">
-        <Button
-          type="button"
-          color="gray"
-          onClick={handleCloseEdit}
-        >
-          취소
-        </Button>
-        <Button
-          type="submit"
-          disabled={!position}
-        >
-          완료
-        </Button>
-      </Flex>
-    </form>
+          ? (
+            <DataList.Root>
+              <DataList.Item align="center">
+                <DataList.Label minWidth="2.5rem">위도</DataList.Label>
+                <DataList.Value>{position.lat}</DataList.Value>
+              </DataList.Item>
+              <DataList.Item align="center">
+                <DataList.Label minWidth="2.5rem">경도</DataList.Label>
+                <DataList.Value>{position.lng}</DataList.Value>
+              </DataList.Item>
+            </DataList.Root>
+          )
+          : (
+            <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
+          )}
+        <Flex justify="between">
+          <Button
+            type="button"
+            color="gray"
+            onClick={handleCloseEdit}
+          >
+            취소
+          </Button>
+          <Button
+            type="submit"
+            disabled={!position}
+          >
+            완료
+          </Button>
+        </Flex>
+      </form>
+    </Flex>
   );
 };

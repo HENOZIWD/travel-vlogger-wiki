@@ -18,7 +18,7 @@ export const ContentDetail = () => {
   const { data, isPending, isError } = useQuery({
     queryKey: ['contentDetail', contentId],
     queryFn: () => getContentDetail({ id: contentId! }),
-    enabled: !!contentId && !isEditing,
+    enabled: !!contentId,
   });
 
   const handleCloseDetail = () => {
