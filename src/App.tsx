@@ -1,68 +1,61 @@
-import './App.css';
-import { css } from '@emotion/react';
-import { MarkerList } from './components/MarkerList';
+import { ContentList } from './components/ContentList';
 import { WorldMap } from './components/WorldMap';
 import { ContentRegisterForm } from './components/ContentRegisterForm';
 import { PlusIcon } from '@radix-ui/react-icons';
-import { useContentRegisterFormState } from './hooks/useContentRegisterFormState';
-import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { ContentDetail } from './components/ContentDetail';
-import { useSearchParams } from 'react-router';
+import { Link, Route, Routes, useLocation } from 'react-router';
+import { Flex, IconButton } from '@radix-ui/themes';
+import { css } from '@emotion/react';
+import { SelectedPosition } from './components/SelectedPosition';
 
 function App() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { position } = useContentRegisterFormState();
-
-  const isRegistering = searchParams.get('register') === 'true';
-
-  const handleOpenRegisterForm = () => {
-    setSearchParams((prev) => {
-      const nextParams = new URLSearchParams(prev);
-      nextParams.delete('content');
-      nextParams.set('register', 'true');
-      return nextParams;
-    });
-  };
+  const location = useLocation();
+  const isRegistering = location.pathname === '/register';
 
   return (
-    <div css={css`
-          position: relative;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: row;
-        `}
+    <Flex
+      width="100%"
+      height="100%"
+      direction="row"
     >
-      <ContentRegisterForm />
-      <ContentDetail />
+      <Routes>
+        <Route
+          path="register"
+          element={<ContentRegisterForm />}
+        />
+        <Route
+          path="content/:contentId"
+          element={<ContentDetail />}
+        />
+      </Routes>
       <WorldMap>
-        <MarkerList />
-        {isRegistering
-          ? <AdvancedMarker position={position} />
-          : null}
+        <ContentList />
+        <SelectedPosition />
         {!isRegistering
           ? (
-            <button
-              type="button"
+            <IconButton
+              asChild
+              size="4"
+              radius="full"
               css={css`
-                  box-shadow: 0 0 8px 1px gray;
-                  position: absolute;
-                  bottom: 2rem;
-                  left: 50%;
-                  transform: translateX(-50%);
-                `}
-              onClick={handleOpenRegisterForm}
+                position: absolute;
+                bottom: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
+                box-shadow: 0 0 8px 4px var(--accent-6);
+              `}
             >
-              <PlusIcon css={css`
-                    width: 1.25rem;
-                    height: 1.25rem;
-                  `}
-              />
-            </button>
+              <Link to="/register">
+                <PlusIcon
+                  width="1.5rem"
+                  height="1.5rem"
+                />
+              </Link>
+            </IconButton>
           )
           : null}
       </WorldMap>
-    </div>
+    </Flex>
   );
 }
 
