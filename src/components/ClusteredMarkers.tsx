@@ -1,56 +1,81 @@
-import { MarkerClusterer, type Marker as MarkerType } from '@googlemaps/markerclusterer';
-import { useMap } from '@vis.gl/react-google-maps';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Marker as MarkerData } from '../utils/marker';
+import { useCallback } from 'react';
+import Supercluster, { type ClusterProperties } from 'supercluster';
+import type { Feature, FeatureCollection, GeoJsonProperties, Point } from 'geojson';
+import { useSupercluster } from '../hooks/useSupercluster';
 import { Marker } from './Marker';
+import { Cluster } from './Cluster';
+import type { Marker as MarkerData } from '../utils/marker';
 
-interface ClusteredMarkersProps { data: MarkerData[] }
+interface ClusteredMarkersProps {
+  geojson: FeatureCollection<Point>;
+  setInfoWindowData: (
+    data: {
+      anchor: google.maps.marker.AdvancedMarkerElement;
+      features: Feature<Point>[];
+    } | null,
+  ) => void;
+}
 
-export const ClusteredMarkers = ({ data }: ClusteredMarkersProps) => {
-  const [markers, setMarkers] = useState<{ [key: string]: MarkerType }>({});
+const superclusterOptions: Supercluster.Options<
+  GeoJsonProperties,
+  ClusterProperties
+> = {
+  extent: 256,
+  radius: 60,
+  maxZoom: 18,
+};
 
-  const map = useMap();
-  const clusterer = useMemo(() => {
-    if (!map) return null;
+export const ClusteredMarkers = ({ geojson, setInfoWindowData }: ClusteredMarkersProps) => {
+  const { clusters, getLeaves } = useSupercluster(geojson, superclusterOptions);
 
-    return new MarkerClusterer({ map });
-  }, [map]);
-
-  useEffect(() => {
-    if (!clusterer) return;
-
-    clusterer.clearMarkers();
-    clusterer.addMarkers(Object.values(markers));
-  }, [clusterer, markers]);
-
-  const setMarkerRef = useCallback((marker: MarkerType | null, key: string) => {
-    setMarkers((markers) => {
-      if ((marker && markers[key]) || (!marker && !markers[key])) {
-        return markers;
-      }
-
-      if (marker) {
-        return {
-          ...markers,
-          [key]: marker,
-        };
-      }
-
-      const { [key]: _, ...newMarkers } = markers;
-
-      return newMarkers;
-    });
-  }, []);
+  const handleClusterClick = useCallback(
+    (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
+      const leaves = getLeaves(clusterId);
+      setInfoWindowData({
+        anchor: marker,
+        features: leaves,
+      });
+    },
+    [getLeaves, setInfoWindowData],
+  );
 
   return (
     <>
-      {data.map((marker) => (
-        <Marker
-          key={marker.id}
-          data={marker}
-          setMarkerRef={setMarkerRef}
-        />
-      ))}
+      {clusters.map((feature) => {
+        const [lng, lat] = feature.geometry.coordinates;
+
+        const isCluster: boolean = feature.properties?.cluster;
+
+        if (isCluster) {
+          const clusterProperties = feature.properties as ClusterProperties;
+
+          return (
+            <Cluster
+              key={clusterProperties.cluster_id}
+              clusterId={clusterProperties.cluster_id}
+              position={{
+                lat,
+                lng,
+              }}
+              markerCount={clusterProperties.point_count}
+              onClusterClick={handleClusterClick}
+            />
+          );
+        }
+
+        const featureProperties = feature.properties as MarkerData;
+
+        return (
+          <Marker
+            key={feature.id}
+            position={{
+              lat,
+              lng,
+            }}
+            data={featureProperties}
+          />
+        );
+      })}
     </>
   );
 };

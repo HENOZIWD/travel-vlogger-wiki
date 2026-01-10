@@ -1,25 +1,21 @@
-import type { Marker as MarkerType } from '@googlemaps/markerclusterer';
-import { AdvancedMarker } from '@vis.gl/react-google-maps';
-import { useCallback } from 'react';
+import { AdvancedMarker, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
 import type { Marker as MarkerData } from '../utils/marker';
 import { css } from '@emotion/react';
 import { Link } from 'react-router';
 import { ChannelThumbnail } from './ChannelThumbnail';
 
 interface MarkerProps {
+  position: google.maps.LatLngLiteral;
   data: MarkerData;
-  setMarkerRef: (marker: MarkerType | null, key: string) => void;
 }
 
-export const Marker = ({ data, setMarkerRef }: MarkerProps) => {
-  const ref = useCallback((marker: google.maps.marker.AdvancedMarkerElement) => {
-    setMarkerRef(marker, data.id);
-  }, [setMarkerRef, data.id]);
+export const Marker = ({ position, data }: MarkerProps) => {
+  const [markerRef] = useAdvancedMarkerRef();
 
   return (
     <AdvancedMarker
-      position={data.positions[0]}
-      ref={ref}
+      position={position}
+      ref={markerRef}
     >
       <Link
         to={`/content/${data.id}`}

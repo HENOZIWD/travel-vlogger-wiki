@@ -1,3 +1,4 @@
+import { getSessionId } from '../utils/storage';
 import { fetchInstance } from './instance';
 
 interface EditContentParams {
@@ -6,5 +7,11 @@ interface EditContentParams {
 }
 
 export async function editContent({ id, positions }: EditContentParams) {
-  return fetchInstance.patch(`contents/${id}`, { json: { positions } });
+  const clientId = getSessionId();
+  return fetchInstance.patch(`contents/${id}`, {
+    json: {
+      positions,
+      clientId,
+    },
+  });
 }

@@ -7,8 +7,9 @@ import { Link, Route, Routes, useLocation } from 'react-router';
 import { Flex, IconButton } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
+import { NotificationListener } from './components/NotificationListener';
 
-function App() {
+export const App = () => {
   const location = useLocation();
   const isRegistering = location.pathname === '/register';
 
@@ -28,6 +29,7 @@ function App() {
           element={<ContentDetail />}
         />
       </Routes>
+      <NotificationListener />
       <WorldMap>
         <ContentList />
         <SelectedPosition />
@@ -57,6 +59,6 @@ function App() {
       </WorldMap>
     </Flex>
   );
-}
+};
 
 export default App;

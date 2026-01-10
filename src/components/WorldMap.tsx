@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { APIProvider, Map, type MapMouseEvent } from '@vis.gl/react-google-maps';
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { usePosition } from '../hooks/usePosition';
 
 const defaultPosition = {
-  lat: 36,
-  lng: 36,
+  lat: 37.5664056,
+  lng: 126.9778222,
 };
 const restriction = {
   latLngBounds: {
@@ -47,9 +47,9 @@ export const WorldMap = ({ children }: WorldMapProps) => {
           position: relative;
         `}
         defaultCenter={defaultPosition}
-        defaultZoom={10}
+        defaultZoom={5}
         minZoom={3}
-        maxZoom={isRegistering ? 18 : undefined}
+        maxZoom={18}
         streetViewControl={false}
         mapId="DEMO_MAP_ID"
         mapTypeControl={false}

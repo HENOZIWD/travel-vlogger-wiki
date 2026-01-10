@@ -4,6 +4,7 @@ export interface Marker {
     lat: number;
     lng: number;
   }[];
+  title: string;
   channel: {
     title: string;
     thumbnailDefault: string;

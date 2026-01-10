@@ -1,8 +1,10 @@
 import { PersonIcon } from '@radix-ui/react-icons';
 import { Avatar } from '@radix-ui/themes';
+import type { Responsive } from '@radix-ui/themes/props';
 
 interface ChannelThumbnailProps {
   title: string;
+  size?: Responsive<'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'>;
   thumbnailDefault: string;
   thumbnailMedium: string;
   thumbnailHigh: string;
@@ -10,6 +12,7 @@ interface ChannelThumbnailProps {
 
 export const ChannelThumbnail = ({
   title,
+  size = '3',
   thumbnailDefault,
   thumbnailMedium,
   thumbnailHigh,
@@ -29,7 +32,7 @@ export const ChannelThumbnail = ({
         ${thumbnailMedium} 240w,
         ${thumbnailHigh} 800w
       `}
-      sizes="2.5rem"
+      size={size}
       radius="full"
       variant="solid"
     />
