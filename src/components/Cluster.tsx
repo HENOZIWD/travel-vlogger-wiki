@@ -36,10 +36,16 @@ export const Cluster = ({
           justify-content: center;
           height: 3rem;
           width: 3rem;
-          font-size: 0.875rem;
-          font-weight: 700;
-          background-color: tomato;
+          font-size: 1rem;
+          background-color: var(--accent-9);
+          box-shadow: 0 0 8px 4px var(--accent-6);
           border-radius: 9999px;
+          text-decoration: none;
+          color: #fff;
+
+          &:hover {
+            transform: scale(1.125);
+          }
         `}
       >
         {markerCount}

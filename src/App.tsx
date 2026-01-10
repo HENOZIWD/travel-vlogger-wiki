@@ -9,7 +9,7 @@ import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
 
-function App() {
+export const App = () => {
   const location = useLocation();
   const isRegistering = location.pathname === '/register';
 
@@ -59,6 +59,6 @@ function App() {
       </WorldMap>
     </Flex>
   );
-}
+};
 
 export default App;

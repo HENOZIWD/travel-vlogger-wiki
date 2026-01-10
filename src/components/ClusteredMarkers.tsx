@@ -1,12 +1,20 @@
 import { useCallback } from 'react';
 import Supercluster, { type ClusterProperties } from 'supercluster';
-import type { FeatureCollection, GeoJsonProperties, Point } from 'geojson';
+import type { Feature, FeatureCollection, GeoJsonProperties, Point } from 'geojson';
 import { useSupercluster } from '../hooks/useSupercluster';
 import { Marker } from './Marker';
 import { Cluster } from './Cluster';
 import type { Marker as MarkerData } from '../utils/marker';
 
-interface ClusteredMarkersProps { geojson: FeatureCollection<Point> }
+interface ClusteredMarkersProps {
+  geojson: FeatureCollection<Point>;
+  setInfoWindowData: (
+    data: {
+      anchor: google.maps.marker.AdvancedMarkerElement;
+      features: Feature<Point>[];
+    } | null,
+  ) => void;
+}
 
 const superclusterOptions: Supercluster.Options<
   GeoJsonProperties,
@@ -17,16 +25,18 @@ const superclusterOptions: Supercluster.Options<
   maxZoom: 18,
 };
 
-export const ClusteredMarkers = ({ geojson }: ClusteredMarkersProps) => {
+export const ClusteredMarkers = ({ geojson, setInfoWindowData }: ClusteredMarkersProps) => {
   const { clusters, getLeaves } = useSupercluster(geojson, superclusterOptions);
 
   const handleClusterClick = useCallback(
-    (_marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
+    (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
       const leaves = getLeaves(clusterId);
-
-      console.log(leaves);
+      setInfoWindowData({
+        anchor: marker,
+        features: leaves,
+      });
     },
-    [getLeaves],
+    [getLeaves, setInfoWindowData],
   );
 
   return (
