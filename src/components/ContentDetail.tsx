@@ -126,7 +126,12 @@ export const ContentDetail = () => {
                       </Button>
                     </Flex>
                   )
-                  : <ContentEditForm id={contentId} />}
+                  : (
+                    <ContentEditForm
+                      id={contentId}
+                      tags={data.tags}
+                    />
+                  )}
               </Box>
             </>
           )}

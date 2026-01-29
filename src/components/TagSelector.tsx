@@ -5,7 +5,9 @@ import { Box, Button, Flex } from '@radix-ui/themes';
 import { useEffect } from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
-export const TagSelector = () => {
+interface TagSelectorProps { initialSelectedValues?: { id: number }[] }
+
+export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
   const { isPending, isError, data, isSuccess } = useQuery({
     queryKey: ['availableTags'],
     queryFn: getAvailableTags,
@@ -14,15 +16,17 @@ export const TagSelector = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
+      const initialSelectedIdSet = new Set((initialSelectedValues ?? []).map((v) => v.id));
+
       dispatch({
         type: 'init',
         payload: data.map((tag) => ({
           ...tag,
-          isSelected: false,
+          isSelected: initialSelectedIdSet.has(tag.id),
         })),
       });
     }
-  }, [data, dispatch, isSuccess]);
+  }, [data, dispatch, isSuccess, initialSelectedValues]);
 
   const handleToggleTag = (id: number) => {
     dispatch({

@@ -4,12 +4,18 @@ import { useMutation } from '@tanstack/react-query';
 import { editContent } from '../apis/editContent';
 import { useEffect, type FormEvent } from 'react';
 import { usePosition } from '../hooks/usePosition';
+import { TagSelector } from './TagSelector';
+import { useTag } from '../hooks/useTagIds';
 
-interface ContentEditFormProps { id: string }
+interface ContentEditFormProps {
+  id: string;
+  tags: { id: number }[];
+}
 
-export const ContentEditForm = ({ id }: ContentEditFormProps) => {
+export const ContentEditForm = ({ id, tags }: ContentEditFormProps) => {
   const [_, setSearchParams] = useSearchParams();
   const { position, resetPosition } = usePosition();
+  const { selectedTagIds } = useTag();
 
   const mutation = useMutation({
     mutationFn: editContent,
@@ -41,6 +47,7 @@ export const ContentEditForm = ({ id }: ContentEditFormProps) => {
     mutation.mutate({
       id,
       positions: [position],
+      tagIds: selectedTagIds,
     });
   };
 
@@ -67,6 +74,7 @@ export const ContentEditForm = ({ id }: ContentEditFormProps) => {
           : (
             <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
           )}
+        <TagSelector initialSelectedValues={tags} />
         <Flex justify="between">
           <Button
             type="button"
