@@ -9,6 +9,8 @@ import { Box, Button, DataList, Flex, Text, TextField } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { useForm, useWatch, type Control } from 'react-hook-form';
 import { usePosition } from '../hooks/usePosition';
+import { TagSelector } from './TagSelector';
+import { useTag } from '../hooks/useTagIds';
 
 interface ContentInputs { url: string }
 
@@ -18,6 +20,7 @@ export const ContentRegisterForm = () => {
     mode: 'all',
   });
   const { position, resetPosition } = usePosition();
+  const { selectedTagIds } = useTag();
 
   const navigate = useNavigate();
 
@@ -38,6 +41,7 @@ export const ContentRegisterForm = () => {
     mutation.mutate({
       url: data.url,
       positions: [position],
+      tagIds: selectedTagIds,
     });
   };
 
@@ -112,6 +116,7 @@ export const ContentRegisterForm = () => {
             : (
               <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
             )}
+          <TagSelector />
           {mutation.isPending
             ? <Text>등록중...</Text>
             : (
