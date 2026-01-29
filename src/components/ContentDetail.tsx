@@ -5,7 +5,7 @@ import { ChannelThumbnail } from './ChannelThumbnail';
 import { Drawer } from './Drawer';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { formatNumber } from '../utils/format';
-import { Box, Button, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
+import { Badge, Box, Button, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
 import { ContentEditForm } from './ContentEditForm';
 
 export const ContentDetail = () => {
@@ -94,6 +94,25 @@ export const ContentDetail = () => {
                   <DataList.Item align="center">
                     <DataList.Label minWidth="5rem">좋아요</DataList.Label>
                     <DataList.Value>{formatNumber(data.likeCount)}</DataList.Value>
+                  </DataList.Item>
+                  <DataList.Item align="center">
+                    <DataList.Label minWidth="5rem">태그</DataList.Label>
+                    <DataList.Value>
+                      <Flex
+                        wrap="wrap"
+                        gap="2"
+                        py="1"
+                      >
+                        {data.tags.map((tag) => (
+                          <Badge
+                            key={tag.id}
+                            size="2"
+                          >
+                            {tag.name}
+                          </Badge>
+                        ))}
+                      </Flex>
+                    </DataList.Value>
                   </DataList.Item>
                 </DataList.Root>
                 {!isEditing

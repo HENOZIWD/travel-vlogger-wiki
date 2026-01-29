@@ -17,6 +17,10 @@ interface GetContentDetailResponse {
     thumbnailMedium: string;
     thumbnailHigh: string;
   };
+  tags: {
+    id: number;
+    name: string;
+  }[];
 }
 
 export async function getContentDetail({ id }: GetContentDetailParams) {
