@@ -8,6 +8,7 @@ import { Flex, IconButton } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
+import { Provider } from 'jotai';
 
 export const App = () => {
   const location = useLocation();
@@ -22,7 +23,11 @@ export const App = () => {
       <Routes>
         <Route
           path="register"
-          element={<ContentRegisterForm />}
+          element={(
+            <Provider>
+              <ContentRegisterForm />
+            </Provider>
+          )}
         />
         <Route
           path="content/:contentId"
