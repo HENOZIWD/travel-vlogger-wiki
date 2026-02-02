@@ -10,7 +10,7 @@ import { css } from '@emotion/react';
 import { useForm, useWatch, type Control } from 'react-hook-form';
 import { usePosition } from '../hooks/usePosition';
 import { TagSelector } from './TagSelector';
-import { useTag } from '../hooks/useTagIds';
+import { useTag } from '../hooks/useTag';
 
 interface ContentInputs { url: string }
 
@@ -20,7 +20,7 @@ export const ContentRegisterForm = () => {
     mode: 'all',
   });
   const { position, resetPosition } = usePosition();
-  const { selectedTagIds } = useTag();
+  const { tagIds } = useTag();
 
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ export const ContentRegisterForm = () => {
     mutation.mutate({
       url: data.url,
       positions: [position],
-      tagIds: selectedTagIds,
+      tagIds,
     });
   };
 

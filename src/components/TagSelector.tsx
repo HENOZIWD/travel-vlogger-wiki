@@ -1,39 +1,42 @@
 import { useQuery } from '@tanstack/react-query';
-import { useTag } from '../hooks/useTagIds';
+import { useTag, type Tag } from '../hooks/useTag';
 import { getAvailableTags } from '../apis/getAvailableTags';
-import { Box, Button, Flex } from '@radix-ui/themes';
-import { useEffect } from 'react';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { Box, Button, Flex, IconButton, TextField } from '@radix-ui/themes';
+import { useEffect, useMemo, useState } from 'react';
+import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { debounce } from '../utils/debounce';
 
-interface TagSelectorProps { initialSelectedValues?: { id: number }[] }
+interface TagSelectorProps { initialSelectedValues?: Tag[] }
 
 export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
   const { isPending, isError, data, isSuccess } = useQuery({
     queryKey: ['availableTags'],
     queryFn: getAvailableTags,
   });
-  const { tags, dispatch, selectedTags } = useTag();
+  const { tags, addTag, deleteTag, tagIds } = useTag();
+  const [searchString, setSearchString] = useState('');
+  const [searchedTags, setSearchedTags] = useState<Tag[]>([]);
 
   useEffect(() => {
-    if (isSuccess && data) {
-      const initialSelectedIdSet = new Set((initialSelectedValues ?? []).map((v) => v.id));
-
-      dispatch({
-        type: 'init',
-        payload: data.map((tag) => ({
-          ...tag,
-          isSelected: initialSelectedIdSet.has(tag.id),
-        })),
-      });
+    if (isSuccess && data && initialSelectedValues) {
+      initialSelectedValues.forEach((tag) => addTag(tag));
     }
-  }, [data, dispatch, isSuccess, initialSelectedValues]);
+  }, [data, addTag, isSuccess, initialSelectedValues]);
 
-  const handleToggleTag = (id: number) => {
-    dispatch({
-      type: 'toggle',
-      payload: { id },
+  const debouncedUpdateSearchedTags = useMemo(() => debounce((curSearchStr: string, tagsData: Tag[]) => {
+    setSearchedTags(() => {
+      if (!tagsData) return [];
+      if (curSearchStr === '') return tagsData;
+
+      return tagsData.filter(({ name }) => name.includes(curSearchStr));
     });
-  };
+  }, 300), []);
+
+  useEffect(() => {
+    if (data) {
+      debouncedUpdateSearchedTags(searchString, data);
+    }
+  }, [data, searchString, debouncedUpdateSearchedTags]);
 
   if (isPending) return null;
   if (isError) return <div>태그 목록을 불러오지 못했습니다.</div>;
@@ -43,7 +46,7 @@ export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
       direction="column"
       gap="2"
     >
-      {selectedTags.length > 0
+      {tags.length > 0
         ? (
           <>
             <Box>선택된 태그</Box>
@@ -51,14 +54,14 @@ export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
               wrap="wrap"
               gap="2"
             >
-              {selectedTags.map(({ id, name }) => (
+              {tags.map((tag) => (
                 <Button
-                  key={id}
+                  key={tag.id}
                   type="button"
                   variant="soft"
-                  onClick={() => handleToggleTag(id)}
+                  onClick={() => deleteTag(tag)}
                 >
-                  {name}
+                  {tag.name}
                   <Cross2Icon />
                 </Button>
               ))}
@@ -67,19 +70,37 @@ export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
         )
         : <Box>태그를 선택해주세요.</Box>}
       <Box>태그 목록</Box>
+      <TextField.Root
+        value={searchString}
+        onChange={(e) => setSearchString(e.currentTarget.value)}
+        placeholder="태그를 검색하세요."
+      >
+        <TextField.Slot side="left">
+          <MagnifyingGlassIcon />
+        </TextField.Slot>
+        <TextField.Slot side="right">
+          <IconButton
+            variant="ghost"
+            type="button"
+            onClick={() => setSearchString('')}
+          >
+            <Cross2Icon />
+          </IconButton>
+        </TextField.Slot>
+      </TextField.Root>
       <Flex
         wrap="wrap"
         gap="2"
       >
-        {tags.map(({ id, name, isSelected }) => (
+        {searchedTags.map((tag) => (
           <Button
             type="button"
-            key={id}
+            key={tag.id}
             variant="solid"
-            disabled={isSelected}
-            onClick={() => handleToggleTag(id)}
+            onClick={() => addTag(tag)}
+            disabled={tagIds.includes(tag.id)}
           >
-            {name}
+            {tag.name}
           </Button>
         ))}
       </Flex>
