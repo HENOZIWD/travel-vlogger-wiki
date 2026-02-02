@@ -1,6 +1,6 @@
 import { fetchInstance } from './instance';
 
-type GetContentsResponse = {
+type SearchContentsResponse = {
   id: string;
   positions: {
     lat: number;
@@ -15,6 +15,6 @@ type GetContentsResponse = {
   title: string;
 }[];
 
-export async function getContents() {
-  return (await fetchInstance.get<GetContentsResponse>('contents')).json();
+export async function searchContents(query: string) {
+  return (await fetchInstance.get<SearchContentsResponse>(`search?q=${query}`)).json();
 }
