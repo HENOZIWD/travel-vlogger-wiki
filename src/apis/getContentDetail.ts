@@ -21,6 +21,10 @@ interface GetContentDetailResponse {
     id: number;
     name: string;
   }[];
+  positions: {
+    lat: number;
+    lng: number;
+  }[];
 }
 
 export async function getContentDetail({ id }: GetContentDetailParams) {
