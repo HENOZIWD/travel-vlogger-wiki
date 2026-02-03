@@ -62,7 +62,7 @@ export const TagSelector = ({ tags, setTags }: TagSelectorProps) => {
                 <Button
                   key={tag.id}
                   type="button"
-                  variant="soft"
+                  variant="surface"
                   onClick={() => deleteTag(tag)}
                 >
                   {tag.name}
