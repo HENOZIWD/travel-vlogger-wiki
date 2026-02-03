@@ -7,7 +7,6 @@ import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { formatNumber } from '../utils/format';
 import { Badge, Box, Button, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
 import { ContentEditForm } from './ContentEditForm';
-import { Provider } from 'jotai';
 
 export const ContentDetail = () => {
   const { contentId } = useParams();
@@ -128,14 +127,12 @@ export const ContentDetail = () => {
                     </Flex>
                   )
                   : (
-                    <Provider>
-                      <ContentEditForm
-                        key={contentId}
-                        id={contentId}
-                        prevPosition={data.positions[0]}
-                        tags={data.tags}
-                      />
-                    </Provider>
+                    <ContentEditForm
+                      key={contentId}
+                      id={contentId}
+                      prevPosition={data.positions[0]}
+                      prevTags={data.tags}
+                    />
                   )}
               </Box>
             </>

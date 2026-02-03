@@ -9,7 +9,6 @@ import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
 import { Search } from './components/Search';
-import { Provider } from 'jotai';
 
 export const App = () => {
   const location = useLocation();
@@ -24,11 +23,7 @@ export const App = () => {
       <Routes>
         <Route
           path="register"
-          element={(
-            <Provider>
-              <ContentRegisterForm />
-            </Provider>
-          )}
+          element={<ContentRegisterForm />}
         />
         <Route
           path="content/:contentId"
@@ -39,9 +34,7 @@ export const App = () => {
         width="100%"
         position="relative"
       >
-        <Provider>
-          <Search />
-        </Provider>
+        <Search />
         <NotificationListener />
         <WorldMap>
           <ContentList />

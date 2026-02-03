@@ -1,27 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
-import { useTag, type Tag } from '../hooks/useTag';
 import { getAvailableTags } from '../apis/getAvailableTags';
 import { Box, Button, Flex, IconButton, TextField } from '@radix-ui/themes';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { debounce } from '../utils/debounce';
+import type { Tag } from '../utils/type';
 
-interface TagSelectorProps { initialSelectedValues?: Tag[] }
+interface TagSelectorProps {
+  tags: Tag[];
+  setTags: Dispatch<SetStateAction<Tag[]>>;
+}
 
-export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
-  const { isPending, isError, data, isSuccess } = useQuery({
+export const TagSelector = ({ tags, setTags }: TagSelectorProps) => {
+  const { isPending, isError, data } = useQuery({
     queryKey: ['availableTags'],
     queryFn: getAvailableTags,
   });
-  const { tags, addTag, deleteTag, tagIds } = useTag();
   const [searchString, setSearchString] = useState('');
   const [searchedTags, setSearchedTags] = useState<Tag[]>([]);
-
-  useEffect(() => {
-    if (isSuccess && data && initialSelectedValues) {
-      initialSelectedValues.forEach((tag) => addTag(tag));
-    }
-  }, [data, addTag, isSuccess, initialSelectedValues]);
 
   const debouncedUpdateSearchedTags = useMemo(() => debounce((curSearchStr: string, tagsData: Tag[]) => {
     setSearchedTags(() => {
@@ -37,6 +33,14 @@ export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
       debouncedUpdateSearchedTags(searchString, data);
     }
   }, [data, searchString, debouncedUpdateSearchedTags]);
+
+  const addTag = (tag: Tag) => {
+    setTags((prev) => prev.some((t) => t.id === tag.id) ? prev : [...prev, tag]);
+  };
+
+  const deleteTag = (tag: Tag) => {
+    setTags((prev) => prev.filter((t) => t.id !== tag.id));
+  };
 
   if (isPending) return null;
   if (isError) return <div>태그 목록을 불러오지 못했습니다.</div>;
@@ -98,7 +102,7 @@ export const TagSelector = ({ initialSelectedValues }: TagSelectorProps) => {
             key={tag.id}
             variant="solid"
             onClick={() => addTag(tag)}
-            disabled={tagIds.includes(tag.id)}
+            disabled={tags.some((t) => t.id === tag.id)}
           >
             {tag.name}
           </Button>

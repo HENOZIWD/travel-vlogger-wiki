@@ -2,21 +2,21 @@ import { useSearchParams } from 'react-router';
 import { Button, DataList, Flex, Heading, Text } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 import { editContent } from '../apis/editContent';
-import { useEffect, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { usePosition } from '../hooks/usePosition';
 import { TagSelector } from './TagSelector';
-import { useTag, type Tag } from '../hooks/useTag';
+import type { Tag } from '../utils/type';
 
 interface ContentEditFormProps {
   id: string;
   prevPosition: google.maps.LatLngLiteral;
-  tags: Tag[];
+  prevTags: Tag[];
 }
 
-export const ContentEditForm = ({ id, tags, prevPosition }: ContentEditFormProps) => {
+export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormProps) => {
   const [_, setSearchParams] = useSearchParams();
   const { position, setPosition } = usePosition();
-  const { tagIds } = useTag();
+  const [tags, setTags] = useState<Tag[]>([...prevTags]);
 
   const mutation = useMutation({
     mutationFn: editContent,
@@ -48,7 +48,7 @@ export const ContentEditForm = ({ id, tags, prevPosition }: ContentEditFormProps
     mutation.mutate({
       id,
       positions: [position],
-      tagIds,
+      tagIds: tags.map((tag) => tag.id),
     });
   };
 
@@ -85,7 +85,10 @@ export const ContentEditForm = ({ id, tags, prevPosition }: ContentEditFormProps
             : (
               <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
             )}
-          <TagSelector initialSelectedValues={tags} />
+          <TagSelector
+            tags={tags}
+            setTags={setTags}
+          />
           <Flex justify="between">
             <Button
               type="button"
