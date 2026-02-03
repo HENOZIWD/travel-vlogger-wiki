@@ -2,22 +2,10 @@ import { Flex, Heading, Text } from '@radix-ui/themes';
 import { Link } from 'react-router';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { css } from '@emotion/react';
+import type { Content } from '../utils/type';
 
 interface SearchContentResultProps {
-  data: {
-    id: string;
-    positions: {
-      lat: number;
-      lng: number;
-    }[];
-    channel: {
-      title: string;
-      thumbnailDefault: string;
-      thumbnailMedium: string;
-      thumbnailHigh: string;
-    };
-    title: string;
-  }[] | undefined;
+  data: Content[] | undefined;
   isFetching: boolean;
   isError: boolean;
 }
