@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAvailableTags } from '../apis/getAvailableTags';
-import { Box, Button, Flex, IconButton, TextField } from '@radix-ui/themes';
+import { Box, Button, Flex, IconButton, Text, TextField } from '@radix-ui/themes';
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { debounce } from '../utils/debounce';
@@ -73,11 +73,17 @@ export const TagSelector = ({ tags, setTags }: TagSelectorProps) => {
           </>
         )
         : <Box>태그를 선택해주세요.</Box>}
-      <Box>태그 목록</Box>
+      <Text
+        as="label"
+        htmlFor="searchTag"
+        size="2"
+      >
+        태그 검색
+      </Text>
       <TextField.Root
+        id="searchTag"
         value={searchString}
         onChange={(e) => setSearchString(e.currentTarget.value)}
-        placeholder="태그를 검색하세요."
       >
         <TextField.Slot side="left">
           <MagnifyingGlassIcon />
