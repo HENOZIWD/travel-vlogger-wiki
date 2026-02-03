@@ -47,7 +47,7 @@ export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormP
 
     mutation.mutate({
       id,
-      positions: [position],
+      position,
       tagIds: tags.map((tag) => tag.id),
     });
   };

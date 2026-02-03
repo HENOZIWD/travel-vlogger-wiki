@@ -5,7 +5,7 @@ export interface Tag {
 
 export interface Content {
   id: string;
-  positions: google.maps.LatLngLiteral[];
+  position: google.maps.LatLngLiteral;
   channel: {
     title: string;
     thumbnailDefault: string;
@@ -32,5 +32,5 @@ export interface ContentDetail {
     thumbnailHigh: string;
   };
   tags: Tag[];
-  positions: google.maps.LatLngLiteral[];
+  position: google.maps.LatLngLiteral;
 }

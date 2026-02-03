@@ -130,7 +130,7 @@ export const ContentDetail = () => {
                     <ContentEditForm
                       key={contentId}
                       id={contentId}
-                      prevPosition={data.positions[0]}
+                      prevPosition={data.position}
                       prevTags={data.tags}
                     />
                   )}

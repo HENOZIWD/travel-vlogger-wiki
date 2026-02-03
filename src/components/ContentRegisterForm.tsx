@@ -40,7 +40,7 @@ export const ContentRegisterForm = () => {
 
     mutation.mutate({
       url: data.url,
-      positions: [position],
+      position,
       tagIds: tags.map((tag) => tag.id),
     });
   };
