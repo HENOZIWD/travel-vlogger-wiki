@@ -106,6 +106,7 @@ export const ContentDetail = () => {
                         {data.tags.map((tag) => (
                           <Badge
                             key={tag.id}
+                            variant="surface"
                             size="2"
                           >
                             {tag.name}

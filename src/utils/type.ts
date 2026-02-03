@@ -13,6 +13,7 @@ export interface Content {
     thumbnailHigh: string;
   };
   title: string;
+  tags: Tag[];
 }
 
 export interface ContentDetail {

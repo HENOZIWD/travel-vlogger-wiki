@@ -1,12 +1,12 @@
 import { AdvancedMarker, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
-import type { Marker as MarkerData } from '../utils/marker';
 import { css } from '@emotion/react';
 import { Link } from 'react-router';
 import { ChannelThumbnail } from './ChannelThumbnail';
+import type { Content } from '../utils/type';
 
 interface MarkerProps {
   position: google.maps.LatLngLiteral;
-  data: MarkerData;
+  data: Content;
 }
 
 export const Marker = ({ position, data }: MarkerProps) => {

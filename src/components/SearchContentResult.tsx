@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from '@radix-ui/themes';
+import { Badge, Flex, Heading, Text } from '@radix-ui/themes';
 import { Link } from 'react-router';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { css } from '@emotion/react';
@@ -32,6 +32,21 @@ export const SearchContentResult = ({ data, isFetching, isError }: SearchContent
                 {content.title}
               </Heading>
             </Link>
+            {content.tags.length > 0
+              ? (
+                <ul css={css`
+                    display: flex;
+                    gap: 0.25rem;
+                  `}
+                >
+                  {content.tags.map(({ id, name }) => (
+                    <li key={id}>
+                      <Badge variant="surface">{name}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              )
+              : null}
             <Flex gap="2">
               <ChannelThumbnail
                 title={content.channel.title}

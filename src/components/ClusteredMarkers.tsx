@@ -4,7 +4,7 @@ import type { Feature, FeatureCollection, GeoJsonProperties, Point } from 'geojs
 import { useSupercluster } from '../hooks/useSupercluster';
 import { Marker } from './Marker';
 import { Cluster } from './Cluster';
-import type { Marker as MarkerData } from '../utils/marker';
+import type { Content } from '../utils/type';
 
 interface ClusteredMarkersProps {
   geojson: FeatureCollection<Point>;
@@ -63,7 +63,7 @@ export const ClusteredMarkers = ({ geojson, setInfoWindowData }: ClusteredMarker
           );
         }
 
-        const featureProperties = feature.properties as MarkerData;
+        const featureProperties = feature.properties as Content;
 
         return (
           <Marker
