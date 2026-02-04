@@ -36,7 +36,7 @@ export const ContentList = () => {
         id: marker.id,
         geometry: {
           type: 'Point',
-          coordinates: [marker.positions[0].lng, marker.positions[0].lat],
+          coordinates: [marker.position.lng, marker.position.lat],
         },
         properties: { ...marker },
       })),

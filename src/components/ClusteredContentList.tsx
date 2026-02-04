@@ -1,9 +1,9 @@
-import { Flex, Heading, Text } from '@radix-ui/themes';
+import { Badge, Flex, Heading, Text } from '@radix-ui/themes';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { Link } from 'react-router';
-import type { Marker } from '../utils/marker';
 import type { Feature, Point } from 'geojson';
 import { css } from '@emotion/react';
+import type { Content } from '../utils/type';
 
 interface ClusteredContentListProps { features: Feature<Point>[] }
 
@@ -20,7 +20,7 @@ export const ClusteredContentList = ({ features }: ClusteredContentListProps) =>
     >
       <ul>
         {features.map((feature) => {
-          const content = feature.properties as Marker;
+          const content = feature.properties as Content;
 
           return (
             <li key={content.id}>
@@ -36,6 +36,21 @@ export const ClusteredContentList = ({ features }: ClusteredContentListProps) =>
                     {content.title}
                   </Heading>
                 </Link>
+                {content.tags.length > 0
+                  ? (
+                    <ul css={css`
+                    display: flex;
+                    gap: 0.25rem;
+                  `}
+                    >
+                      {content.tags.map(({ id, name }) => (
+                        <li key={id}>
+                          <Badge variant="surface">{name}</Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                  : null}
                 <Flex gap="2">
                   <ChannelThumbnail
                     title={content.channel.title}

@@ -3,15 +3,17 @@ import { fetchInstance } from './instance';
 
 interface EditContentParams {
   id: string;
-  positions: google.maps.LatLngLiteral[];
+  position: google.maps.LatLngLiteral;
+  tagIds: number[];
 }
 
-export async function editContent({ id, positions }: EditContentParams) {
+export async function editContent({ id, position, tagIds }: EditContentParams) {
   const clientId = getSessionId();
   return fetchInstance.patch(`contents/${id}`, {
     json: {
-      positions,
+      position,
       clientId,
+      tagIds,
     },
   });
 }

@@ -3,16 +3,18 @@ import { fetchInstance } from './instance';
 
 interface RegisterContentParams {
   url: string;
-  positions: google.maps.LatLngLiteral[];
+  position: google.maps.LatLngLiteral;
+  tagIds: number[];
 }
 
-export async function registerContent({ url, positions }: RegisterContentParams) {
+export async function registerContent({ url, position, tagIds }: RegisterContentParams) {
   const clientId = getSessionId();
   return fetchInstance.post('contents', {
     json: {
       url,
-      positions,
+      position,
       clientId,
+      tagIds,
     },
   });
 }
