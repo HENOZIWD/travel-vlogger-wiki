@@ -5,6 +5,7 @@ import { BellIcon } from '@radix-ui/react-icons';
 import { css } from '@emotion/react';
 import { Notification, type NotificationProps as NotificationType } from './Notification';
 import { safeParseJSON } from '../utils/format';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const NotificationListener = () => {
   const [sessionId] = useState(() => {
@@ -17,22 +18,29 @@ export const NotificationListener = () => {
   const [messages, setMessages] = useState<NotificationType[]>([]);
   const [notReadMessageCount, setNotReadMessageCount] = useState<number>(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/events/${sessionId}`, { withCredentials: true });
 
-    eventSource.onmessage = (e) => {
-      const data = safeParseJSON(e.data);
+    eventSource.onmessage = async (e) => {
+      const data: NotificationType = safeParseJSON(e.data);
       if (!data) return;
       setMessages((prev) => [...prev, {
         ...data,
         isRead: false,
       }]);
+      if (data.type === 'SUCCESS') {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['contentList'] }),
+          queryClient.invalidateQueries({ queryKey: ['contentDetail'] }),
+        ]);
+      }
       setNotReadMessageCount((prev) => prev + 1);
     };
 
     return () => eventSource.close();
-  }, [sessionId]);
+  }, [queryClient, sessionId]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView();

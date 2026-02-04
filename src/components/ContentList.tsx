@@ -14,7 +14,7 @@ const emptyGeojson: FeatureCollection<Point> = {
 
 export const ContentList = () => {
   const { isPending, isError, data } = useQuery({
-    queryKey: ['markerList'],
+    queryKey: ['contentList'],
     queryFn: getContents,
   });
 
