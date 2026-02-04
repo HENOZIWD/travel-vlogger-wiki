@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { APIProvider, Map, type MapMouseEvent } from '@vis.gl/react-google-maps';
+import { Map, type MapMouseEvent } from '@vis.gl/react-google-maps';
 import { type ReactNode } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { usePosition } from '../hooks/usePosition';
@@ -36,29 +36,24 @@ export const WorldMap = ({ children }: WorldMapProps) => {
   };
 
   return (
-    <APIProvider
-      apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-      region="KR"
+    <Map
+      css={css`
+        width: 100%;
+        height: 100%;
+        position: relative;
+      `}
+      defaultCenter={defaultPosition}
+      defaultZoom={5}
+      minZoom={3}
+      maxZoom={18}
+      streetViewControl={false}
+      mapId="DEMO_MAP_ID"
+      mapTypeControl={false}
+      restriction={restriction}
+      fullscreenControl={false}
+      onClick={isRegistering || isEditing ? handleClick : undefined}
     >
-      <Map
-        css={css`
-          width: 100%;
-          height: 100%;
-          position: relative;
-        `}
-        defaultCenter={defaultPosition}
-        defaultZoom={5}
-        minZoom={3}
-        maxZoom={18}
-        streetViewControl={false}
-        mapId="DEMO_MAP_ID"
-        mapTypeControl={false}
-        restriction={restriction}
-        fullscreenControl={false}
-        onClick={isRegistering || isEditing ? handleClick : undefined}
-      >
-        {children}
-      </Map>
-    </APIProvider>
+      {children}
+    </Map>
   );
 };
