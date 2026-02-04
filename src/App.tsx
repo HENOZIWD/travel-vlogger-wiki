@@ -10,6 +10,7 @@ import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
 import { Search } from './components/Search';
 import { APIProvider } from '@vis.gl/react-google-maps';
+import { ContentHistory } from './components/ContentHistory';
 
 export const App = () => {
   const location = useLocation();
@@ -33,6 +34,10 @@ export const App = () => {
           <Route
             path="content/:contentId"
             element={<ContentDetail />}
+          />
+          <Route
+            path="content/:contentId/history"
+            element={<ContentHistory />}
           />
         </Routes>
         <Box

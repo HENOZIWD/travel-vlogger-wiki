@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { getContentDetail } from '../apis/getContentDetail';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { Drawer } from './Drawer';
@@ -126,6 +126,12 @@ export const ContentDetail = () => {
                     </DataList.Value>
                   </DataList.Item>
                 </DataList.Root>
+                <RadixLink
+                  asChild
+                  size="2"
+                >
+                  <Link to={`/content/${contentId}/history`}>편집 기록</Link>
+                </RadixLink>
                 {!isEditing
                   ? (
                     <Flex justify="end">
