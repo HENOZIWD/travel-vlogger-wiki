@@ -9,62 +9,68 @@ import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
 import { Search } from './components/Search';
+import { APIProvider } from '@vis.gl/react-google-maps';
 
 export const App = () => {
   const location = useLocation();
   const isRegistering = location.pathname === '/register';
 
   return (
-    <Flex
-      width="100%"
-      height="100%"
-      direction="row"
+    <APIProvider
+      apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+      region="KR"
     >
-      <Routes>
-        <Route
-          path="register"
-          element={<ContentRegisterForm />}
-        />
-        <Route
-          path="content/:contentId"
-          element={<ContentDetail />}
-        />
-      </Routes>
-      <Box
+      <Flex
         width="100%"
-        position="relative"
+        height="100%"
+        direction="row"
       >
-        <Search />
-        <NotificationListener />
-        <WorldMap>
-          <ContentList />
-          <SelectedPosition />
-          {!isRegistering
-            ? (
-              <IconButton
-                asChild
-                size="4"
-                radius="full"
-                css={css`
-                position: absolute;
-                bottom: 1rem;
-                left: 50%;
-                transform: translateX(-50%);
-                box-shadow: 0 0 8px 4px var(--accent-6);
-              `}
-              >
-                <Link to="/register">
-                  <PlusIcon
-                    width="1.5rem"
-                    height="1.5rem"
-                  />
-                </Link>
-              </IconButton>
-            )
-            : null}
-        </WorldMap>
-      </Box>
-    </Flex>
+        <Routes>
+          <Route
+            path="register"
+            element={<ContentRegisterForm />}
+          />
+          <Route
+            path="content/:contentId"
+            element={<ContentDetail />}
+          />
+        </Routes>
+        <Box
+          width="100%"
+          position="relative"
+        >
+          <Search />
+          <NotificationListener />
+          <WorldMap>
+            <ContentList />
+            <SelectedPosition />
+            {!isRegistering
+              ? (
+                <IconButton
+                  asChild
+                  size="4"
+                  radius="full"
+                  css={css`
+                    position: absolute;
+                    bottom: 1rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    box-shadow: 0 0 8px 4px var(--accent-6);
+                  `}
+                >
+                  <Link to="/register">
+                    <PlusIcon
+                      width="1.5rem"
+                      height="1.5rem"
+                    />
+                  </Link>
+                </IconButton>
+              )
+              : null}
+          </WorldMap>
+        </Box>
+      </Flex>
+    </APIProvider>
   );
 };
 

@@ -7,6 +7,8 @@ import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { formatNumber } from '../utils/format';
 import { Badge, Box, Button, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
 import { ContentEditForm } from './ContentEditForm';
+import { useMap } from '@vis.gl/react-google-maps';
+import { useEffect } from 'react';
 
 export const ContentDetail = () => {
   const { contentId } = useParams();
@@ -20,6 +22,14 @@ export const ContentDetail = () => {
     queryFn: () => getContentDetail({ id: contentId! }),
     enabled: !!contentId,
   });
+
+  const map = useMap();
+
+  useEffect(() => {
+    if (map && data) {
+      map.panTo(data.position);
+    }
+  }, [map, data]);
 
   const handleCloseDetail = () => {
     navigate('/');
