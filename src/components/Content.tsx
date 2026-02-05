@@ -35,20 +35,23 @@ export const Content = ({ data }: ContentProps) => {
           </ul>
         )
         : null}
-      <Flex
-        gap="2"
-        align="center"
-      >
-        <ChannelThumbnail
-          title={data.channel.title}
-          size="1"
-          thumbnailDefault={data.channel.thumbnailDefault}
-          thumbnailMedium={data.channel.thumbnailMedium}
-          thumbnailHigh={data.channel.thumbnailHigh}
-        />
-        <Text size="2">
-          {data.channel.title}
-        </Text>
+      <Flex justify="between">
+        <Flex
+          gap="2"
+          align="center"
+        >
+          <ChannelThumbnail
+            title={data.channel.title}
+            size="1"
+            thumbnailDefault={data.channel.thumbnailDefault}
+            thumbnailMedium={data.channel.thumbnailMedium}
+            thumbnailHigh={data.channel.thumbnailHigh}
+          />
+          <Text size="2">
+            {data.channel.title}
+          </Text>
+        </Flex>
+        <Text size="2">{new Date(data.publishedAt).toLocaleDateString()}</Text>
       </Flex>
     </Flex>
   );
