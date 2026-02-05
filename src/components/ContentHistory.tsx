@@ -105,7 +105,7 @@ export const ContentHistory = () => {
   return (
     <Drawer
       key={contentId}
-      onClose={() => navigate('/')}
+      onClose={() => navigate(-1)}
     >
       <Heading
         as="h1"
