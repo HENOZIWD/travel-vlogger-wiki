@@ -20,7 +20,6 @@ export const SearchContentResult = ({ data, isFetching, isError }: SearchContent
       gap="3"
       direction="column"
       maxHeight="18rem"
-      maxWidth="24rem"
     >
       <ul>
         {data.map((content) => (

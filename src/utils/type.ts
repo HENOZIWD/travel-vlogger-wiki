@@ -14,6 +14,7 @@ export interface Content {
   };
   title: string;
   tags: Tag[];
+  publishedAt: string;
 }
 
 export interface ContentDetail {
