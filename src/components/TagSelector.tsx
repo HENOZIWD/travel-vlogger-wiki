@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAvailableTags } from '../apis/getAvailableTags';
 import { Box, Button, Flex, IconButton, Text, TextField } from '@radix-ui/themes';
-import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { memo, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { debounce } from '../utils/debounce';
 import type { Tag } from '../utils/type';
@@ -11,7 +11,7 @@ interface TagSelectorProps {
   setTags: Dispatch<SetStateAction<Tag[]>>;
 }
 
-export const TagSelector = ({ tags, setTags }: TagSelectorProps) => {
+export const TagSelector = memo(({ tags, setTags }: TagSelectorProps) => {
   const { isPending, isError, data } = useQuery({
     queryKey: ['availableTags'],
     queryFn: getAvailableTags,
@@ -116,4 +116,4 @@ export const TagSelector = ({ tags, setTags }: TagSelectorProps) => {
       </Flex>
     </Flex>
   );
-};
+});
