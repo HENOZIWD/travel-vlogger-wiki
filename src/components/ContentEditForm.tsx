@@ -6,6 +6,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { usePosition } from '../hooks/usePosition';
 import { TagSelector } from './TagSelector';
 import type { Tag } from '../utils/type';
+import { ErrorMessage } from './ErrorMessage';
 
 interface ContentEditFormProps {
   id: string;
@@ -104,6 +105,14 @@ export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormP
               완료
             </Button>
           </Flex>
+          {mutation.isError
+            ? (
+              <ErrorMessage
+                message={mutation.error.message}
+                role="alert"
+              />
+            )
+            : null}
         </form>
       </Flex>
     </>

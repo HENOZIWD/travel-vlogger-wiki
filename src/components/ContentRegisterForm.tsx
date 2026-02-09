@@ -11,6 +11,7 @@ import { useForm, useWatch, type Control } from 'react-hook-form';
 import { usePosition } from '../hooks/usePosition';
 import { TagSelector } from './TagSelector';
 import type { Tag } from '../utils/type';
+import { ErrorMessage } from './ErrorMessage';
 
 interface ContentInputs { url: string }
 
@@ -120,30 +121,24 @@ export const ContentRegisterForm = () => {
             tags={tags}
             setTags={setTags}
           />
-          {mutation.isPending
-            ? <Text>등록중...</Text>
-            : (
-              <Flex justify="end">
-                <Button
-                  type="submit"
-                  disabled={!formState.isValid || !position}
-                  variant="solid"
-                  size="2"
-                >
-                  등록하기
-                </Button>
-                {mutation.isError
-                  ? (
-                    <div>
-                      오류가 발생했습니다:
-                      {' '}
-                      {mutation.error.message}
-                    </div>
-                  )
-                  : null}
-                {mutation.isSuccess ? <Text>등록이 완료되었습니다.</Text> : null}
-              </Flex>
-            )}
+          <Flex justify="end">
+            <Button
+              type="submit"
+              disabled={!formState.isValid || !position}
+              variant="solid"
+              size="2"
+            >
+              등록하기
+            </Button>
+          </Flex>
+          {mutation.isError
+            ? (
+              <ErrorMessage
+                message={mutation.error.message}
+                role="alert"
+              />
+            )
+            : null}
         </form>
       </Flex>
     </Drawer>
