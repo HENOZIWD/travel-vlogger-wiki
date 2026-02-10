@@ -1,14 +1,16 @@
+'use client';
+
 import { css } from '@emotion/react';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { Box, Flex, IconButton } from '@radix-ui/themes';
-import type { MouseEventHandler, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router';
 
-interface DrawerProps {
-  children?: ReactNode;
-  onClose: MouseEventHandler<HTMLButtonElement>;
-}
+interface DrawerProps { children?: ReactNode }
 
-export const Drawer = ({ children, onClose }: DrawerProps) => {
+export const Drawer = ({ children }: DrawerProps) => {
+  const navigate = useNavigate();
+
   return (
     <Box
       width="30rem"
@@ -19,10 +21,21 @@ export const Drawer = ({ children, onClose }: DrawerProps) => {
         z-index: 9999;
       `}
     >
-      <Flex justify="end">
+      <Flex justify="between">
         <IconButton
           type="button"
-          onClick={onClose}
+          onClick={() => navigate(-1)}
+          variant="soft"
+          size="3"
+        >
+          <ChevronLeftIcon
+            width="1.25rem"
+            height="1.25rem"
+          />
+        </IconButton>
+        <IconButton
+          type="button"
+          onClick={() => navigate('/')}
           variant="soft"
           size="3"
         >

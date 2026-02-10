@@ -1,9 +1,8 @@
 import { getVideoIdFromYoutubeURL } from '../utils/url';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { useMutation } from '@tanstack/react-query';
 import { registerContent } from '../apis/registerContent';
-import { Drawer } from './Drawer';
 import { useNavigate } from 'react-router';
 import { Box, Button, DataList, Flex, Text, TextField } from '@radix-ui/themes';
 import { css } from '@emotion/react';
@@ -12,6 +11,8 @@ import { usePosition } from '../hooks/usePosition';
 import { TagSelector } from './TagSelector';
 import type { Tag } from '../utils/type';
 import { ErrorMessage } from './ErrorMessage';
+import { ErrorBoundary } from './ErrorBoundary';
+import { SuspenseFallback } from './SuspenseFallback';
 
 interface ContentInputs { url: string }
 
@@ -51,7 +52,7 @@ export const ContentRegisterForm = () => {
   };
 
   return (
-    <Drawer onClose={closeForm}>
+    <>
       <VideoPreview control={control} />
       <Flex
         asChild
@@ -117,14 +118,19 @@ export const ContentRegisterForm = () => {
             : (
               <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
             )}
-          <TagSelector
-            tags={tags}
-            setTags={setTags}
-          />
+          <ErrorBoundary>
+            <Suspense fallback={<SuspenseFallback />}>
+              <TagSelector
+                tags={tags}
+                setTags={setTags}
+              />
+            </Suspense>
+          </ErrorBoundary>
           <Flex justify="end">
             <Button
               type="submit"
-              disabled={!formState.isValid || !position}
+              disabled={!formState.isValid || !position || mutation.isPending}
+              loading={mutation.isPending}
               variant="solid"
               size="2"
             >
@@ -141,7 +147,7 @@ export const ContentRegisterForm = () => {
             : null}
         </form>
       </Flex>
-    </Drawer>
+    </>
   );
 };
 

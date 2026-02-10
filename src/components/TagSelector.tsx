@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { getAvailableTags } from '../apis/getAvailableTags';
 import { Box, Button, Flex, IconButton, Text, TextField } from '@radix-ui/themes';
 import { memo, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
@@ -12,7 +12,7 @@ interface TagSelectorProps {
 }
 
 export const TagSelector = memo(({ tags, setTags }: TagSelectorProps) => {
-  const { isPending, isError, data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ['availableTags'],
     queryFn: getAvailableTags,
   });
@@ -41,9 +41,6 @@ export const TagSelector = memo(({ tags, setTags }: TagSelectorProps) => {
   const deleteTag = (tag: Tag) => {
     setTags((prev) => prev.filter((t) => t.id !== tag.id));
   };
-
-  if (isPending) return null;
-  if (isError) return <div>태그 목록을 불러오지 못했습니다.</div>;
 
   return (
     <Flex

@@ -134,7 +134,8 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
                   <Button
                     type="submit"
                     color="red"
-                    disabled={!selectedOption}
+                    disabled={!selectedOption || mutation.isPending}
+                    loading={mutation.isPending}
                   >
                     제출
                   </Button>
