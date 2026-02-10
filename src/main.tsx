@@ -5,8 +5,9 @@ import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Theme } from '@radix-ui/themes';
+import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')!).render(
             path="/*"
             element={(
               <Theme accentColor="jade">
-                <App />
+                <ErrorBoundary>
+                  <App />
+                </ErrorBoundary>
               </Theme>
             )}
           />

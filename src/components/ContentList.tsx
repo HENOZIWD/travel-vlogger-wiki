@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import { ClusteredContentList } from './ClusteredContentList';
 import { InfoWindow } from '@vis.gl/react-google-maps';
+import { ErrorBoundary } from './ErrorBoundary';
 
 const emptyGeojson: FeatureCollection<Point> = {
   type: 'FeatureCollection',
@@ -67,7 +68,9 @@ export const ContentList = () => {
             anchor={infoWindowData.anchor}
             onClose={handleInfoWindowClose}
           >
-            <ClusteredContentList features={infoWindowData.features} />
+            <ErrorBoundary>
+              <ClusteredContentList features={infoWindowData.features} />
+            </ErrorBoundary>
           </InfoWindow>
         )
         : null}

@@ -2,10 +2,13 @@ import { useSearchParams } from 'react-router';
 import { Button, DataList, Flex, Heading, Text } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 import { editContent } from '../apis/editContent';
-import { useEffect, useState, type FormEvent } from 'react';
+import { Suspense, useEffect, useState, type FormEvent } from 'react';
 import { usePosition } from '../hooks/usePosition';
 import { TagSelector } from './TagSelector';
 import type { Tag } from '../utils/type';
+import { ErrorMessage } from './ErrorMessage';
+import { ErrorBoundary } from './ErrorBoundary';
+import { SuspenseFallback } from './SuspenseFallback';
 
 interface ContentEditFormProps {
   id: string;
@@ -85,10 +88,14 @@ export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormP
             : (
               <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
             )}
-          <TagSelector
-            tags={tags}
-            setTags={setTags}
-          />
+          <ErrorBoundary>
+            <Suspense fallback={<SuspenseFallback />}>
+              <TagSelector
+                tags={tags}
+                setTags={setTags}
+              />
+            </Suspense>
+          </ErrorBoundary>
           <Flex justify="between">
             <Button
               type="button"
@@ -99,11 +106,20 @@ export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormP
             </Button>
             <Button
               type="submit"
-              disabled={!position}
+              disabled={!position || mutation.isPending}
+              loading={mutation.isPending}
             >
               완료
             </Button>
           </Flex>
+          {mutation.isError
+            ? (
+              <ErrorMessage
+                message={mutation.error.message}
+                role="alert"
+              />
+            )
+            : null}
         </form>
       </Flex>
     </>

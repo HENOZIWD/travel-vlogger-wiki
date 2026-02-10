@@ -11,6 +11,10 @@ import { NotificationListener } from './components/NotificationListener';
 import { Search } from './components/Search';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { ContentHistory } from './components/ContentHistory';
+import { Drawer } from './components/Drawer';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Suspense } from 'react';
+import { SuspenseFallback } from './components/SuspenseFallback';
 
 export const App = () => {
   const location = useLocation();
@@ -29,15 +33,37 @@ export const App = () => {
         <Routes>
           <Route
             path="register"
-            element={<ContentRegisterForm />}
+            element={(
+              <Drawer>
+                <ErrorBoundary>
+                  <ContentRegisterForm />
+                </ErrorBoundary>
+              </Drawer>
+            )}
           />
           <Route
             path="content/:contentId"
-            element={<ContentDetail />}
+            element={(
+              <Drawer>
+                <ErrorBoundary>
+                  <Suspense fallback={<SuspenseFallback />}>
+                    <ContentDetail />
+                  </Suspense>
+                </ErrorBoundary>
+              </Drawer>
+            )}
           />
           <Route
             path="content/:contentId/history"
-            element={<ContentHistory />}
+            element={(
+              <Drawer>
+                <ErrorBoundary>
+                  <Suspense fallback={<SuspenseFallback />}>
+                    <ContentHistory />
+                  </Suspense>
+                </ErrorBoundary>
+              </Drawer>
+            )}
           />
         </Routes>
         <Box

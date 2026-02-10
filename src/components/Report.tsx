@@ -10,8 +10,9 @@ interface ReportProps {
 }
 
 const REPORT_MESSAGES: Record<string, string> = {
-  1: '표시한 위치가 실제 여행지와 다름',
-  2: '태그가 내용과 일치하지 않음',
+  1: '여행과 관련없는 영상',
+  2: '표시한 위치가 실제 여행지와 다름',
+  3: '태그가 내용과 일치하지 않음',
   etc: '기타',
 };
 
@@ -98,24 +99,15 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
                   name="reason"
                   onValueChange={setSelectedOption}
                 >
-                  <RadioGroup.Item
-                    value="1"
-                    checked={selectedOption === '1'}
-                  >
-                    {REPORT_MESSAGES[1]}
-                  </RadioGroup.Item>
-                  <RadioGroup.Item
-                    value="2"
-                    checked={selectedOption === '2'}
-                  >
-                    {REPORT_MESSAGES[2]}
-                  </RadioGroup.Item>
-                  <RadioGroup.Item
-                    value="etc"
-                    checked={selectedOption === 'etc'}
-                  >
-                    {REPORT_MESSAGES.etc}
-                  </RadioGroup.Item>
+                  {Object.entries(REPORT_MESSAGES).map(([key, value]) => (
+                    <RadioGroup.Item
+                      key={key}
+                      value={key}
+                      checked={selectedOption === key}
+                    >
+                      {value}
+                    </RadioGroup.Item>
+                  ))}
                 </RadioGroup.Root>
                 {selectedOption === 'etc'
                   ? (
@@ -142,7 +134,8 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
                   <Button
                     type="submit"
                     color="red"
-                    disabled={!selectedOption}
+                    disabled={!selectedOption || mutation.isPending}
+                    loading={mutation.isPending}
                   >
                     제출
                   </Button>

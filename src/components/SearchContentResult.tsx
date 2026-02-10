@@ -1,16 +1,22 @@
 import { Flex } from '@radix-ui/themes';
-import type { Content as ContentType } from '../utils/type';
+import type { Tag } from '../utils/type';
 import { Content } from './Content';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { searchContents } from '../apis/searchContents';
 
 interface SearchContentResultProps {
-  data: ContentType[] | undefined;
-  isFetching: boolean;
-  isError: boolean;
+  query: string;
+  tags: Tag[];
 }
 
-export const SearchContentResult = ({ data, isFetching, isError }: SearchContentResultProps) => {
-  if (isFetching) return <div>검색 중...</div>;
-  if (isError || data === undefined) return <div>검색 중 오류가 발생했습니다.</div>;
+export const SearchContentResult = ({ query, tags }: SearchContentResultProps) => {
+  const { data } = useSuspenseQuery({
+    queryKey: ['searchContent', query, tags],
+    queryFn: () => searchContents({
+      query,
+      tags,
+    }),
+  });
 
   if (data.length === 0) return <div>검색 결과가 없습니다.</div>;
 

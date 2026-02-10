@@ -2,26 +2,18 @@ import { css } from '@emotion/react';
 import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Box, Button, Flex, IconButton, Popover } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { searchContents } from '../apis/searchContents';
+import { Suspense, useEffect, useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { SearchContentResult } from './SearchContentResult';
 import { getAvailableTags } from '../apis/getAvailableTags';
 import { debounce } from '../utils/debounce';
 import type { Tag } from '../utils/type';
+import { ErrorBoundary } from './ErrorBoundary';
+import { SuspenseFallback } from './SuspenseFallback';
 
 export const Search = () => {
   const [query, setQuery] = useState('');
   const [tags, setTags] = useState<Tag[]>([]);
   const [showResult, setShowResult] = useState(false);
-  const { data, refetch, isFetching, isError } = useQuery({
-    queryKey: ['searchContent', query],
-    queryFn: () => searchContents({
-      query,
-      tags,
-    }),
-    enabled: false,
-    retry: false,
-  });
   const tagQuery = useQuery({
     queryKey: ['availableTags'],
     queryFn: getAvailableTags,
@@ -55,7 +47,6 @@ export const Search = () => {
     e.preventDefault();
     if (!query.trim() && tags.length === 0) return;
 
-    refetch();
     setShowResult(true);
   };
 
@@ -107,11 +98,14 @@ export const Search = () => {
                 {' '}
                 검색 결과
               </Box>
-              <SearchContentResult
-                data={data}
-                isFetching={isFetching}
-                isError={isError}
-              />
+              <ErrorBoundary>
+                <Suspense fallback={<SuspenseFallback />}>
+                  <SearchContentResult
+                    query={query}
+                    tags={tags}
+                  />
+                </Suspense>
+              </ErrorBoundary>
             </Flex>
           )
           : (
