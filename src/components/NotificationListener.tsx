@@ -17,7 +17,6 @@ export const NotificationListener = () => {
 
   const [messages, setMessages] = useState<NotificationType[]>([]);
   const [notReadMessageCount, setNotReadMessageCount] = useState<number>(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -31,21 +30,21 @@ export const NotificationListener = () => {
       eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/events/${sessionId}`, { withCredentials: true });
 
       eventSource.onopen = () => {
-        setMessages((prev) => ([...prev, {
+        setMessages((prev) => ([{
           type: 'SUCCESS',
           message: '알림 서버와 연결되었습니다.',
           timestamp: Date.now(),
           isRead: false,
-        }]));
+        }, ...prev]));
       };
 
       eventSource.onmessage = async (e) => {
         const data: NotificationType = safeParseJSON(e.data);
         if (!data) return;
-        setMessages((prev) => [...prev, {
+        setMessages((prev) => [{
           ...data,
           isRead: false,
-        }]);
+        }, ...prev]);
         if (data.type === 'SUCCESS') {
           await Promise.all([
             queryClient.invalidateQueries({ queryKey: ['contentList'] }),
@@ -58,12 +57,12 @@ export const NotificationListener = () => {
       eventSource.onerror = () => {
         eventSource?.close();
 
-        setMessages((prev) => ([...prev, {
+        setMessages((prev) => ([{
           type: 'FAILED',
           message: '알림 서버와 연결 중 오류가 발생했습니다. 잦은 요청이나 서버 내부 오류가 원인일 수 있습니다. 1분 후 연결을 재시도합니다.',
           timestamp: Date.now(),
           isRead: false,
-        }]));
+        }, ...prev]));
         setNotReadMessageCount((prev) => prev + 1);
 
         if (timerRef.current) clearTimeout(timerRef.current);
@@ -79,10 +78,6 @@ export const NotificationListener = () => {
     };
   }, [queryClient, sessionId]);
 
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView();
-  }, []);
-
   const readMessages = () => {
     setMessages((prev) => prev.map((msg) => ({
       ...msg,
@@ -92,14 +87,7 @@ export const NotificationListener = () => {
   };
 
   const handleOpenChange = (open: boolean) => {
-    if (open) {
-      setTimeout(() => {
-        scrollRef.current?.scrollIntoView();
-      }, 0);
-    }
-    else {
-      readMessages();
-    }
+    if (!open) readMessages();
   };
 
   return (
@@ -177,10 +165,6 @@ export const NotificationListener = () => {
               알림이 없습니다.
             </Flex>
           )}
-        <div
-          key="scrollTarget"
-          ref={scrollRef}
-        />
       </Popover.Content>
     </Popover.Root>
   );
