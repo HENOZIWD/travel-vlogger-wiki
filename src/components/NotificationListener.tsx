@@ -20,26 +20,63 @@ export const NotificationListener = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/events/${sessionId}`, { withCredentials: true });
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-    eventSource.onmessage = async (e) => {
-      const data: NotificationType = safeParseJSON(e.data);
-      if (!data) return;
-      setMessages((prev) => [...prev, {
-        ...data,
-        isRead: false,
-      }]);
-      if (data.type === 'SUCCESS') {
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['contentList'] }),
-          queryClient.invalidateQueries({ queryKey: ['contentDetail'] }),
-        ]);
-      }
-      setNotReadMessageCount((prev) => prev + 1);
+  useEffect(() => {
+    let eventSource: EventSource | null = null;
+
+    const connect = () => {
+      if (eventSource) eventSource.close();
+
+      eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/events/${sessionId}`, { withCredentials: true });
+
+      eventSource.onopen = () => {
+        setMessages((prev) => ([...prev, {
+          type: 'SUCCESS',
+          message: '알림 서버와 연결되었습니다.',
+          timestamp: Date.now(),
+          isRead: false,
+        }]));
+      };
+
+      eventSource.onmessage = async (e) => {
+        const data: NotificationType = safeParseJSON(e.data);
+        if (!data) return;
+        setMessages((prev) => [...prev, {
+          ...data,
+          isRead: false,
+        }]);
+        if (data.type === 'SUCCESS') {
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['contentList'] }),
+            queryClient.invalidateQueries({ queryKey: ['contentDetail'] }),
+          ]);
+        }
+        setNotReadMessageCount((prev) => prev + 1);
+      };
+
+      eventSource.onerror = () => {
+        eventSource?.close();
+
+        setMessages((prev) => ([...prev, {
+          type: 'FAILED',
+          message: '알림 서버와 연결 중 오류가 발생했습니다. 잦은 요청이나 서버 내부 오류가 원인일 수 있습니다. 1분 후 연결을 재시도합니다.',
+          timestamp: Date.now(),
+          isRead: false,
+        }]));
+        setNotReadMessageCount((prev) => prev + 1);
+
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(connect, 60000);
+      };
     };
 
-    return () => eventSource.close();
+    connect();
+
+    return () => {
+      if (eventSource) eventSource.close();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [queryClient, sessionId]);
 
   useEffect(() => {
