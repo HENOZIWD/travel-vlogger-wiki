@@ -20,16 +20,15 @@ export const NotificationListener = () => {
   const queryClient = useQueryClient();
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const eventSourceRef = useRef<EventSource>(null);
 
   useEffect(() => {
-    let eventSource: EventSource | null = null;
-
     const connect = () => {
-      if (eventSource) eventSource.close();
+      if (eventSourceRef.current) eventSourceRef.current.close();
 
-      eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/events/${sessionId}`, { withCredentials: true });
+      eventSourceRef.current = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/events/${sessionId}`, { withCredentials: true });
 
-      eventSource.onopen = () => {
+      eventSourceRef.current.onopen = () => {
         setMessages((prev) => ([{
           type: 'SUCCESS',
           message: '알림 서버와 연결되었습니다.',
@@ -38,7 +37,7 @@ export const NotificationListener = () => {
         }, ...prev]));
       };
 
-      eventSource.onmessage = async (e) => {
+      eventSourceRef.current.onmessage = async (e) => {
         const data: NotificationType = safeParseJSON(e.data);
         if (!data) return;
         setMessages((prev) => [{
@@ -54,8 +53,8 @@ export const NotificationListener = () => {
         setNotReadMessageCount((prev) => prev + 1);
       };
 
-      eventSource.onerror = () => {
-        eventSource?.close();
+      eventSourceRef.current.onerror = () => {
+        eventSourceRef.current?.close();
 
         setMessages((prev) => ([{
           type: 'FAILED',
@@ -73,7 +72,7 @@ export const NotificationListener = () => {
     connect();
 
     return () => {
-      if (eventSource) eventSource.close();
+      if (eventSourceRef.current) eventSourceRef.current.close();
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [queryClient, sessionId]);
