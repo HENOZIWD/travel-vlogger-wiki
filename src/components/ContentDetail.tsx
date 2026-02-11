@@ -84,11 +84,11 @@ export const ContentDetail = () => {
           </DataList.Item>
           <DataList.Item align="center">
             <DataList.Label minWidth="5rem">조회수</DataList.Label>
-            <DataList.Value>{formatNumber(data.viewCount)}</DataList.Value>
+            <DataList.Value>{formatNumber(Number(data.viewCount))}</DataList.Value>
           </DataList.Item>
           <DataList.Item align="center">
             <DataList.Label minWidth="5rem">좋아요</DataList.Label>
-            <DataList.Value>{formatNumber(data.likeCount)}</DataList.Value>
+            <DataList.Value>{formatNumber(Number(data.likeCount))}</DataList.Value>
           </DataList.Item>
           <DataList.Item align="center">
             <DataList.Label minWidth="5rem">태그</DataList.Label>
