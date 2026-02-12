@@ -21,8 +21,8 @@ export interface ContentDetail {
   id: string;
   title: string;
   publishedAt: string;
-  viewCount: number;
-  likeCount: number;
+  viewCount: string;
+  likeCount: string;
   lastEditorAddress: string;
   lastEditorId: string;
   channel: {
