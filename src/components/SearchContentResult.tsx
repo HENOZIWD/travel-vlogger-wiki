@@ -1,6 +1,6 @@
-import { Flex, Heading } from '@radix-ui/themes';
+import { Button, Flex, Heading } from '@radix-ui/themes';
 import { Content } from './Content';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { searchContents } from '../apis/searchContents';
 import { useSearchParams } from 'react-router';
 
@@ -9,12 +9,15 @@ export const SearchContentResult = () => {
   const q = searchParams.get('q');
   const tags = searchParams.get('tags');
 
-  const { data } = useSuspenseQuery({
+  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery({
     queryKey: ['searchContent', q, tags],
-    queryFn: () => searchContents({
+    queryFn: ({ pageParam }: { pageParam: string | null }) => searchContents({
       q,
       tags,
+      cursor: pageParam,
     }),
+    initialPageParam: null,
+    getNextPageParam: (lastpage) => lastpage.nextCursor,
   });
 
   return (
@@ -31,14 +34,13 @@ export const SearchContentResult = () => {
         asChild
         gap="3"
         direction="column"
-        maxHeight="18rem"
         p="4"
       >
-        {data.length === 0
+        {data.pages.length === 0
           ? <div>검색 결과가 없습니다.</div>
           : (
             <ul>
-              {data.map((content) => (
+              {data.pages.flatMap((page) => page.data).map((content) => (
                 <li key={content.id}>
                   <Content data={content} />
                 </li>
@@ -46,6 +48,22 @@ export const SearchContentResult = () => {
             </ul>
           )}
       </Flex>
+      {hasNextPage
+        ? (
+          <Flex
+            justify="center"
+            mb="4"
+          >
+            <Button
+              type="button"
+              loading={isFetchingNextPage}
+              onClick={() => fetchNextPage()}
+            >
+              더 불러오기
+            </Button>
+          </Flex>
+        )
+        : null}
     </>
   );
 };
