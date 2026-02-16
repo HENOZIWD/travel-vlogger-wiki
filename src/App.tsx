@@ -15,6 +15,7 @@ import { Drawer } from './components/Drawer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Suspense } from 'react';
 import { SuspenseFallback } from './components/SuspenseFallback';
+import { SearchContentResult } from './components/SearchContentResult';
 
 export const App = () => {
   const location = useLocation();
@@ -60,6 +61,18 @@ export const App = () => {
                 <ErrorBoundary>
                   <Suspense fallback={<SuspenseFallback />}>
                     <ContentHistory />
+                  </Suspense>
+                </ErrorBoundary>
+              </Drawer>
+            )}
+          />
+          <Route
+            path="search"
+            element={(
+              <Drawer>
+                <ErrorBoundary>
+                  <Suspense fallback={<SuspenseFallback />}>
+                    <SearchContentResult />
                   </Suspense>
                 </ErrorBoundary>
               </Drawer>

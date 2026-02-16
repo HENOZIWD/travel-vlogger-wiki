@@ -1,12 +1,22 @@
-import type { Content, Tag } from '../utils/type';
+import type { Content } from '../utils/type';
 import { fetchInstance } from './instance';
 
 interface SearchContentsParams {
-  query: string;
-  tags: Tag[];
+  q: string | null;
+  tags: string | null;
+  cursor: string | null;
 }
-type SearchContentsResponse = Content[];
+interface SearchContentsResponse {
+  data: Content[];
+  nextCursor: string | null;
+}
 
-export async function searchContents({ query, tags }: SearchContentsParams) {
-  return (await fetchInstance.get<SearchContentsResponse>(`search?q=${query}&tags=${tags.map((t) => t.id).join(',')}`)).json();
+export async function searchContents({ q, tags, cursor }: SearchContentsParams) {
+  const searchParams = new URLSearchParams();
+
+  if (q) searchParams.append('q', q);
+  if (tags) searchParams.append('tags', tags);
+  if (cursor) searchParams.append('cursor', cursor);
+
+  return (await fetchInstance.get<SearchContentsResponse>(`search?${searchParams.toString()}`)).json();
 }

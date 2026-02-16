@@ -1,39 +1,80 @@
-import { Flex } from '@radix-ui/themes';
-import type { Tag } from '../utils/type';
+import { Button, Flex, Heading } from '@radix-ui/themes';
 import { Content } from './Content';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { searchContents } from '../apis/searchContents';
+import { useSearchParams } from 'react-router';
+import { css } from '@emotion/react';
+import { useScrollRestoration } from '../hooks/useScrollRestoration';
 
-interface SearchContentResultProps {
-  query: string;
-  tags: Tag[];
-}
+export const SearchContentResult = () => {
+  const [searchParams] = useSearchParams();
+  const q = searchParams.get('q');
+  const tags = searchParams.get('tags');
 
-export const SearchContentResult = ({ query, tags }: SearchContentResultProps) => {
-  const { data } = useSuspenseQuery({
-    queryKey: ['searchContent', query, tags],
-    queryFn: () => searchContents({
-      query,
+  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery({
+    queryKey: ['searchContent', q, tags],
+    queryFn: ({ pageParam }: { pageParam: string | null }) => searchContents({
+      q,
       tags,
+      cursor: pageParam,
     }),
+    initialPageParam: null,
+    getNextPageParam: (lastpage) => lastpage.nextCursor,
   });
 
-  if (data.length === 0) return <div>검색 결과가 없습니다.</div>;
+  const scrollRef = useScrollRestoration<HTMLUListElement>();
 
   return (
-    <Flex
-      asChild
-      gap="3"
-      direction="column"
-      maxHeight="18rem"
-    >
-      <ul>
-        {data.map((content) => (
-          <li key={content.id}>
-            <Content data={content} />
-          </li>
-        ))}
-      </ul>
-    </Flex>
+    <>
+      <Heading
+        as="h1"
+        size="4"
+        align="center"
+        mb="4"
+      >
+        {q ? `"${q}" ` : ' '}
+        검색 결과
+      </Heading>
+      <Flex
+        asChild
+        gap="3"
+        direction="column"
+        p="4"
+        css={css`
+          overflow-y: auto;
+          height: calc(100% - 5rem);
+        `}
+      >
+        {data.pages.length === 0
+          ? <div>검색 결과가 없습니다.</div>
+          : (
+            <ul ref={scrollRef}>
+              {data.pages.flatMap((page) => page.data).map((content) => (
+                <li key={content.id}>
+                  <Content data={content} />
+                </li>
+              ))}
+              {hasNextPage
+                ? (
+                  <Flex
+                    asChild
+                    justify="center"
+                  >
+                    <li>
+                      <Button
+                        type="button"
+                        loading={isFetchingNextPage}
+                        onClick={() => fetchNextPage()}
+                      >
+                        더 불러오기
+                      </Button>
+                    </li>
+                  </Flex>
+                )
+                : null}
+            </ul>
+          )}
+      </Flex>
+    </>
   );
 };
