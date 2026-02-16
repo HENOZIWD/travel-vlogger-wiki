@@ -31,9 +31,16 @@ export const ClusteredMarkers = ({ geojson, setInfoWindowData }: ClusteredMarker
   const handleClusterClick = useCallback(
     (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
       const leaves = getLeaves(clusterId);
+
+      const sortedLeaves = [...leaves].sort((a, b) =>
+        (b.properties as Content).publishedAt > (a.properties as Content).publishedAt
+          ? 1
+          : -1,
+      );
+
       setInfoWindowData({
         anchor: marker,
-        features: leaves,
+        features: sortedLeaves,
       });
     },
     [getLeaves, setInfoWindowData],
