@@ -35,7 +35,11 @@ export const Content = ({ data }: ContentProps) => {
           </ul>
         )
         : null}
-      <Flex justify="between">
+      <Flex
+        justify="between"
+        gap="4"
+        align="center"
+      >
         <Flex
           gap="2"
           align="center"
