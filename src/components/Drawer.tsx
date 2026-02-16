@@ -19,7 +19,6 @@ export const Drawer = ({ children }: DrawerProps) => {
         flex-shrink: 0;
         box-shadow: 1px 0 8px 0 var(--gray-6);
         z-index: 9999;
-        overflow-y: auto;
       `}
     >
       <Flex justify="between">
