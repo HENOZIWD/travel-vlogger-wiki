@@ -13,7 +13,7 @@ export const useMapViewport = ({ padding = 0 }: MapViewportOptions = {}) => {
   useEffect(() => {
     if (!map) return;
 
-    const listener = map.addListener('idle', () => {
+    const setViewPort = () => {
       const bounds = map.getBounds();
       const zoom = map.getZoom();
       const projection = map.getProjection();
@@ -33,7 +33,11 @@ export const useMapViewport = ({ padding = 0 }: MapViewportOptions = {}) => {
 
       setBbox([w, s, e, n]);
       setZoom(zoom);
-    });
+    };
+
+    const listener = map.addListener('idle', setViewPort);
+
+    setViewPort(); // initial clustering
 
     return () => listener.remove();
   }, [map, padding]);
