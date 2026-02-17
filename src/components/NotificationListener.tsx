@@ -134,6 +134,7 @@ export const NotificationListener = () => {
       <Popover.Content
         maxHeight="16rem"
         maxWidth="24rem"
+        side="left"
       >
         {messages.length > 0
           ? (
