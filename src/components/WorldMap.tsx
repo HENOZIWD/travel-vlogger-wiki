@@ -43,7 +43,7 @@ export const WorldMap = ({ children }: WorldMapProps) => {
         position: relative;
       `}
       defaultCenter={defaultPosition}
-      defaultZoom={5}
+      defaultZoom={7}
       minZoom={3}
       maxZoom={18}
       streetViewControl={false}

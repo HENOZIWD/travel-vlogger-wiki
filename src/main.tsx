@@ -7,7 +7,14 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { Theme } from '@radix-ui/themes';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

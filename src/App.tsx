@@ -85,32 +85,30 @@ export const App = () => {
         >
           <Search />
           <NotificationListener />
+          {!isRegistering
+            ? (
+              <IconButton
+                asChild
+                size="4"
+                css={css`
+                  position: absolute;
+                  z-index: 9999;
+                  top: 5rem;
+                  right: 1rem;
+                `}
+              >
+                <Link to="/register">
+                  <PlusIcon
+                    width="1.5rem"
+                    height="1.5rem"
+                  />
+                </Link>
+              </IconButton>
+            )
+            : null}
           <WorldMap>
             <ContentList />
             <SelectedPosition />
-            {!isRegistering
-              ? (
-                <IconButton
-                  asChild
-                  size="4"
-                  radius="full"
-                  css={css`
-                    position: absolute;
-                    bottom: 1rem;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    box-shadow: 0 0 8px 4px var(--accent-6);
-                  `}
-                >
-                  <Link to="/register">
-                    <PlusIcon
-                      width="1.5rem"
-                      height="1.5rem"
-                    />
-                  </Link>
-                </IconButton>
-              )
-              : null}
           </WorldMap>
         </Box>
       </Flex>
