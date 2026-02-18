@@ -3,7 +3,6 @@ import { Content } from './Content';
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { searchContents } from '../apis/searchContents';
 import { useSearchParams } from 'react-router';
-import { css } from '@emotion/react';
 import { useScrollRestoration } from '../hooks/useScrollRestoration';
 
 export const SearchContentResult = () => {
@@ -24,13 +23,15 @@ export const SearchContentResult = () => {
 
   const scrollRef = useScrollRestoration<HTMLUListElement>();
 
+  const flattedData = data.pages.flatMap((page) => page.data);
+
   return (
     <>
       <Heading
         as="h1"
         size="4"
         align="center"
-        mb="4"
+        my="4"
       >
         {q ? `"${q}" ` : ' '}
         검색 결과
@@ -40,16 +41,12 @@ export const SearchContentResult = () => {
         gap="3"
         direction="column"
         p="4"
-        css={css`
-          overflow-y: auto;
-          height: calc(100% - 5rem);
-        `}
       >
-        {data.pages.length === 0
+        {flattedData.length === 0
           ? <div>검색 결과가 없습니다.</div>
           : (
             <ul ref={scrollRef}>
-              {data.pages.flatMap((page) => page.data).map((content) => (
+              {flattedData.map((content) => (
                 <li key={content.id}>
                   <Content data={content} />
                 </li>

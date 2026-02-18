@@ -132,17 +132,20 @@ export const NotificationListener = () => {
         </IconButton>
       </Popover.Trigger>
       <Popover.Content
-        maxHeight="16rem"
-        maxWidth="24rem"
-        side="left"
+        side="bottom"
+        collisionPadding={8}
+        css={css`
+          max-width: min(var(--radix-popover-content-available-width), 24rem);
+          max-height: min(var(--radix-popover-content-available-height), 16rem);
+        `}
       >
         {messages.length > 0
           ? (
             <ul css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-          `}
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+              `}
             >
               {messages.map(({ type, message, timestamp, isRead }) => (
                 <li key={timestamp}>

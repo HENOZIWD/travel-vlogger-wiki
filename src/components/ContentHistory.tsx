@@ -19,7 +19,8 @@ export const ContentHistory = () => {
     <div key={contentId}>
       <Heading
         as="h1"
-        my="2"
+        my="4"
+        mb="2"
         css={css`
           padding: 0 1rem;
         `}
