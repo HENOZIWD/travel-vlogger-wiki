@@ -4,7 +4,7 @@ import { ContentRegisterForm } from './components/ContentRegisterForm';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { ContentDetail } from './components/ContentDetail';
 import { Link, Route, Routes, useLocation } from 'react-router';
-import { Box, Flex, IconButton } from '@radix-ui/themes';
+import { Box, IconButton } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
@@ -26,10 +26,17 @@ export const App = () => {
       apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
       region="KR"
     >
-      <Flex
-        width="100%"
-        height="100%"
-        direction="row"
+      <div css={css`
+          position: relative;
+          display: flex;
+          width: 100%;
+          height: 100%;
+          flex-direction: row;
+
+          @media screen and (max-width: 54rem) {
+            flex-direction: column-reverse;
+          }
+        `}
       >
         <Routes>
           <Route
@@ -81,6 +88,7 @@ export const App = () => {
         </Routes>
         <Box
           width="100%"
+          height="100%"
           position="relative"
         >
           <Search />
@@ -111,7 +119,7 @@ export const App = () => {
             <SelectedPosition />
           </WorldMap>
         </Box>
-      </Flex>
+      </div>
     </APIProvider>
   );
 };

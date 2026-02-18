@@ -2,7 +2,7 @@
 
 import { css } from '@emotion/react';
 import { ChevronLeftIcon, Cross2Icon } from '@radix-ui/react-icons';
-import { Box, Flex, IconButton } from '@radix-ui/themes';
+import { IconButton } from '@radix-ui/themes';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -12,16 +12,27 @@ export const Drawer = ({ children }: DrawerProps) => {
   const navigate = useNavigate();
 
   return (
-    <Box
-      width="30rem"
-      height="100%"
-      css={css`
+    <div css={css`
+        display: flex;
+        flex-direction: column;
+        width: min(32rem, 50vw);
+        height: 100%;
         flex-shrink: 0;
         box-shadow: 1px 0 8px 0 var(--gray-6);
         z-index: 9999;
+
+        @media screen and (max-width: 54rem) {
+          width: 100%;
+          height: min(32rem, 50vh);
+        }
       `}
     >
-      <Flex justify="between">
+      <div css={css`
+          display: flex;
+          justify-content: space-between;
+          box-shadow: 0 1px 0px 0px var(--gray-6);
+        `}
+      >
         <IconButton
           type="button"
           onClick={() => navigate(-1)}
@@ -44,8 +55,14 @@ export const Drawer = ({ children }: DrawerProps) => {
             height="1.25rem"
           />
         </IconButton>
-      </Flex>
-      {children}
-    </Box>
+      </div>
+      <div css={css`
+          overflow-y: auto;
+          flex-grow: 1;
+        `}
+      >
+        {children}
+      </div>
+    </div>
   );
 };
