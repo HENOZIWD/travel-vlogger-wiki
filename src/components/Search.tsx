@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Button, Flex, IconButton, Popover } from '@radix-ui/themes';
+import { Button, Dialog, Flex, IconButton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { getAvailableTags } from '../apis/getAvailableTags';
@@ -17,6 +17,7 @@ export const Search = () => {
   });
   const [searchedTags, setSearchedTags] = useState<Tag[]>([]);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const debouncedUpdateSearchedTags = useMemo(() => debounce((curSearchStr: string, tagsData: Tag[]) => {
     setSearchedTags(() => {
@@ -50,6 +51,7 @@ export const Search = () => {
     if (trimmedQuery) searchParams.append('q', trimmedQuery);
     if (tags.length > 0) searchParams.append('tags', tags.map(({ id }) => id).join(','));
 
+    setOpen(false);
     navigate(`/search?${searchParams.toString()}`);
   };
 
@@ -60,8 +62,11 @@ export const Search = () => {
   };
 
   return (
-    <Popover.Root>
-      <Popover.Trigger>
+    <Dialog.Root
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <Dialog.Trigger>
         <IconButton
           size="4"
           css={css`
@@ -76,20 +81,19 @@ export const Search = () => {
             height="1.5rem"
           />
         </IconButton>
-      </Popover.Trigger>
-      <Popover.Content
-        side="right"
-        css={css`
-          display: block;
-          height: fit-content;
-        `}
-      >
-
+      </Dialog.Trigger>
+      <Dialog.Content>
         <Flex
           direction="column"
           gap="2"
         >
-          <label htmlFor="search">콘텐츠 검색</label>
+          <Dialog.Title mb="0">콘텐츠 검색</Dialog.Title>
+          <Dialog.Description
+            mb="2"
+            size="2"
+          >
+            검색어를 입력하거나 태그를 선택하세요.
+          </Dialog.Description>
           <form onSubmit={handleSearchContent}>
             <Flex
               align="center"
@@ -105,6 +109,9 @@ export const Search = () => {
                 wrap="wrap"
                 gap="2"
                 flexGrow="1"
+                css={css`
+                  max-width: calc(100% - 40px);
+                `}
               >
                 {tags.map((tag) => (
                   <Button
@@ -141,6 +148,8 @@ export const Search = () => {
           <Flex
             wrap="wrap"
             gap="2"
+            maxHeight="13rem"
+            overflowY="auto"
           >
             {searchedTags.map((tag) => (
               <Button
@@ -154,8 +163,18 @@ export const Search = () => {
               </Button>
             ))}
           </Flex>
+          <Flex justify="end">
+            <Dialog.Close>
+              <Button
+                type="button"
+                color="gray"
+              >
+                닫기
+              </Button>
+            </Dialog.Close>
+          </Flex>
         </Flex>
-      </Popover.Content>
-    </Popover.Root>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
