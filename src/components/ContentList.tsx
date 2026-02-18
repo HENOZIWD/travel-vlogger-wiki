@@ -150,6 +150,7 @@ export const ContentList = () => {
               bottom: 1rem;
               left: 50%;
               transform: translateX(-50%);
+              white-space: nowrap;
 
               :disabled {
                 background-color: var(--gray-12);
@@ -161,7 +162,7 @@ export const ContentList = () => {
             loading={isFetching}
             disabled={isFetching || !canRefetch}
           >
-            {canRefetch ? '다시 불러오기' : '다시 불러오기에 범위가 너무 큽니다.'}
+            {canRefetch ? '이 지역 검색' : '확대하여 검색'}
           </Button>
         )
         : null}
