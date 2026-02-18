@@ -24,6 +24,8 @@ export const SearchContentResult = () => {
 
   const scrollRef = useScrollRestoration<HTMLUListElement>();
 
+  const flattedData = data.pages.flatMap((page) => page.data);
+
   return (
     <>
       <Heading
@@ -45,11 +47,11 @@ export const SearchContentResult = () => {
           height: calc(100% - 5rem);
         `}
       >
-        {data.pages.length === 0
+        {flattedData.length === 0
           ? <div>검색 결과가 없습니다.</div>
           : (
             <ul ref={scrollRef}>
-              {data.pages.flatMap((page) => page.data).map((content) => (
+              {flattedData.map((content) => (
                 <li key={content.id}>
                   <Content data={content} />
                 </li>
