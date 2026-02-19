@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getContents } from '../apis/getContents';
 import { ClusteredMarkers } from './ClusteredMarkers';
 import { useLocation, useSearchParams } from 'react-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import { ClusteredContentList } from './ClusteredContentList';
 import { InfoWindow, useMap } from '@vis.gl/react-google-maps';
@@ -25,6 +25,21 @@ export const ContentList = () => {
   const map = useMap();
   const [mapState, setMapState] = useState<MapState | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isLastFetched, setIsLastFetched] = useState(true);
+  const [isZoomEnough, setIsZoomEnough] = useState(false);
+
+  const {
+    isLoading,
+    data,
+    refetch,
+    isFetched: isFirstFetched,
+    isFetching,
+  } = useQuery({
+    queryKey: ['contentList'],
+    queryFn: () => getContents(mapState!.bound),
+    enabled: !!mapState,
+    placeholderData: (prev) => prev,
+  });
 
   const debouncedUpdateMapState = useMemo(
     () => debounce(({ bound, zoom }: MapState) => setMapState({
@@ -52,35 +67,17 @@ export const ContentList = () => {
         zoom,
       });
       setIsDragging(false);
+      setIsZoomEnough(zoom >= 7);
+      if (isFirstFetched) {
+        setIsLastFetched(false);
+      }
     });
 
     return () => {
       google.maps.event.removeListener(dragstartListener);
       google.maps.event.removeListener(idleListener);
     };
-  }, [debouncedUpdateMapState, map]);
-
-  const {
-    isLoading,
-    data,
-    refetch,
-    isFetched,
-    isFetching,
-  } = useQuery({
-    queryKey: ['contentList', mapState],
-    queryFn: () => getContents(mapState!.bound),
-    enabled: false,
-    placeholderData: (prev) => prev,
-  });
-
-  const firstFetchRef = useRef(true);
-
-  useEffect(() => {
-    if (!mapState || !firstFetchRef.current) return;
-
-    refetch();
-    firstFetchRef.current = false;
-  }, [mapState, refetch]);
+  }, [debouncedUpdateMapState, map, isFirstFetched]);
 
   const [infoWindowData, setInfoWindowData] = useState<{
     anchor: google.maps.marker.AdvancedMarkerElement;
@@ -104,20 +101,18 @@ export const ContentList = () => {
     };
   }, [data]);
 
-  const handleInfoWindowClose = useCallback(
-    () => setInfoWindowData(null),
-    [setInfoWindowData],
-  );
-
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
   const isRegistering = location.pathname === '/register';
   const isEditing = searchParams.get('edit') === 'true';
 
-  if (isLoading || !mapState) return null;
+  const handleRefetch = async () => {
+    await refetch();
+    setIsLastFetched(true);
+  };
 
-  const canRefetch = mapState.zoom >= 7;
+  if (isLoading || !mapState) return null;
 
   return (
     <>
@@ -131,7 +126,7 @@ export const ContentList = () => {
         ? (
           <InfoWindow
             anchor={infoWindowData.anchor}
-            onClose={handleInfoWindowClose}
+            onClose={() => setInfoWindowData(null)}
           >
             <ErrorBoundary>
               <ClusteredContentList features={infoWindowData.features} />
@@ -139,7 +134,7 @@ export const ContentList = () => {
           </InfoWindow>
         )
         : null}
-      {!isFetched && data && !isDragging
+      {!isLastFetched && !isDragging
         ? (
           <Button
             type="button"
@@ -158,11 +153,11 @@ export const ContentList = () => {
                 opacity: 0.75;
               }
             `}
-            onClick={() => refetch()}
+            onClick={handleRefetch}
             loading={isFetching}
-            disabled={isFetching || !canRefetch}
+            disabled={isFetching || !isZoomEnough}
           >
-            {canRefetch ? '이 지역 검색' : '확대하여 검색'}
+            {isZoomEnough ? '이 지역 검색' : '확대하여 검색'}
           </Button>
         )
         : null}
