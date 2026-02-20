@@ -18,7 +18,7 @@ interface ContentEditFormProps {
 
 export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormProps) => {
   const [_, setSearchParams] = useSearchParams();
-  const { position, setPosition } = usePosition();
+  const { position, setPosition, resetPosition } = usePosition();
   const [tags, setTags] = useState<Tag[]>([...prevTags]);
 
   const mutation = useMutation({
@@ -30,7 +30,8 @@ export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormP
 
   useEffect(() => {
     setPosition(prevPosition);
-  }, [prevPosition, setPosition]);
+    return () => resetPosition();
+  }, [prevPosition, setPosition, resetPosition]);
 
   const handleCloseEdit = () => {
     closeForm();

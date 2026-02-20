@@ -35,6 +35,7 @@ export const ContentRegisterForm = () => {
 
   useEffect(() => {
     resetPosition();
+    return () => resetPosition();
   }, [resetPosition]);
 
   const onSubmit = (data: ContentInputs) => {
