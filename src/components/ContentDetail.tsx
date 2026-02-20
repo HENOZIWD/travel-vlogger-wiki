@@ -4,10 +4,12 @@ import { getContentDetail } from '../apis/getContentDetail';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { formatNumber } from '../utils/format';
-import { Badge, Box, Button, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
+import { Badge, Button, Callout, DataList, Flex, Heading, Link as RadixLink, Text } from '@radix-ui/themes';
 import { ContentEditForm } from './ContentEditForm';
 import { useMap } from '@vis.gl/react-google-maps';
 import { useEffect } from 'react';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { css } from '@emotion/react';
 
 export const ContentDetail = () => {
   const { contentId } = useParams();
@@ -42,13 +44,16 @@ export const ContentDetail = () => {
   return (
     <div key={contentId}>
       <EmbedYoutubePlayer id={data.id} />
-      <Box px="3">
+      <Flex
+        px="3"
+        py="4"
+        direction="column"
+        gap="4"
+      >
         <Heading
           as="h1"
           size="5"
           weight="bold"
-          mt="4"
-          mb="3"
         >
           {data.title}
         </Heading>
@@ -74,10 +79,34 @@ export const ContentDetail = () => {
             )
             : <Text>{data.channel.title}</Text>}
         </Flex>
-        <DataList.Root
-          size="2"
-          my="4"
-        >
+        {data.overview
+          ? (
+            <section css={css`
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                border-radius: 0.25rem;
+                background-color: var(--gray-5);
+                padding: 1rem;
+              `}
+            >
+              <Heading
+                as="h2"
+                size="4"
+              >
+                동영상 개요
+              </Heading>
+              <Callout.Root size="1">
+                <Callout.Icon><InfoCircledIcon /></Callout.Icon>
+                <Callout.Text>AI가 분석하여 생성한 개요입니다.</Callout.Text>
+              </Callout.Root>
+              <div>
+                {data.overview}
+              </div>
+            </section>
+          )
+          : null}
+        <DataList.Root size="2">
           <DataList.Item align="center">
             <DataList.Label minWidth="5rem">업로드 날짜</DataList.Label>
             <DataList.Value>{new Date(data.publishedAt).toLocaleString()}</DataList.Value>
@@ -136,7 +165,7 @@ export const ContentDetail = () => {
               prevTags={data.tags}
             />
           )}
-      </Box>
+      </Flex>
     </div>
   );
 };
