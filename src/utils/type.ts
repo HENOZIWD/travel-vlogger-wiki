@@ -35,6 +35,7 @@ export interface ContentDetail {
   };
   tags: Tag[];
   position: google.maps.LatLngLiteral;
+  overview: string | null;
 }
 
 export interface ContentHistory {
