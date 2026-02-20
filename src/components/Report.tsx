@@ -24,8 +24,8 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
     onSuccess: () => {
       setResult('신고가 접수되었습니다.');
     },
-    onError: () => {
-      setResult('신고 접수 중 오류가 발생했습니다.');
+    onError: (error) => {
+      setResult(error.message || '신고 접수 중 오류가 발생했습니다.');
     },
   });
 
