@@ -135,7 +135,7 @@ export const ContentList = () => {
           </InfoWindow>
         )
         : null}
-      {!isLastFetched && !isDragging
+      {!isLastFetched && !isDragging && !(isRegistering || isEditing)
         ? (
           <Button
             type="button"
