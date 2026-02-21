@@ -43,7 +43,10 @@ export const ContentDetail = () => {
 
   return (
     <div key={contentId}>
-      <EmbedYoutubePlayer id={data.id} />
+      <EmbedYoutubePlayer
+        id={data.id}
+        title={data.title}
+      />
       <Flex
         px="3"
         py="4"

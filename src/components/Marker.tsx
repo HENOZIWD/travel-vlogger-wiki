@@ -37,7 +37,7 @@ export const Marker = ({ position, data }: MarkerProps) => {
         `}
       >
         <ChannelThumbnail
-          title={data.channel.title}
+          title=""
           thumbnailDefault={data.channel.thumbnailDefault}
           thumbnailMedium={data.channel.thumbnailMedium}
           thumbnailHigh={data.channel.thumbnailHigh}

@@ -102,6 +102,7 @@ export const ContentEditForm = ({ id, prevPosition, prevTags }: ContentEditFormP
               type="button"
               color="gray"
               onClick={handleCloseEdit}
+              highContrast
             >
               취소
             </Button>

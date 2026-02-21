@@ -90,6 +90,7 @@ export const TagSelector = memo(({ tags, setTags }: TagSelectorProps) => {
             variant="ghost"
             type="button"
             onClick={() => setSearchString('')}
+            aria-label="입력 초기화"
           >
             <Cross2Icon />
           </IconButton>

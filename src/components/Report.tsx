@@ -3,6 +3,7 @@ import { Button, Dialog, Flex, RadioGroup, TextArea } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 import { report } from '../apis/report';
 import { useState, type FormEvent } from 'react';
+import { css } from '@emotion/react';
 
 interface ReportProps {
   historyId: string;
@@ -58,10 +59,15 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
           color="red"
           size="1"
           variant="soft"
+          css={css`
+            color: var(--accent-11);
+          `}
         >
           <ExclamationTriangleIcon />
           {' '}
-          신고하기
+          <span>
+            신고하기
+          </span>
         </Button>
       </Dialog.Trigger>
 
@@ -127,6 +133,7 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
                     <Button
                       type="button"
                       color="gray"
+                      highContrast
                     >
                       취소
                     </Button>
@@ -136,6 +143,11 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
                     color="red"
                     disabled={!selectedOption || mutation.isPending}
                     loading={mutation.isPending}
+                    css={css`
+                      &:not(:disabled) {
+                        background-color: var(--accent-11);
+                      }
+                    `}
                   >
                     제출
                   </Button>

@@ -38,6 +38,7 @@ export const Drawer = ({ children }: DrawerProps) => {
           onClick={() => navigate(-1)}
           variant="soft"
           size="3"
+          aria-label="뒤로가기"
         >
           <ChevronLeftIcon
             width="1.25rem"
@@ -49,6 +50,7 @@ export const Drawer = ({ children }: DrawerProps) => {
           onClick={() => navigate('/')}
           variant="soft"
           size="3"
+          aria-label="닫기"
         >
           <Cross2Icon
             width="1.25rem"

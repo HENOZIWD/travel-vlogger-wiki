@@ -100,6 +100,7 @@ export const NotificationListener = () => {
             top: 1rem;
             right: 1rem;
           `}
+          aria-label={`알림. 읽지 않은 알림 ${notReadMessageCount}개`}
         >
           {notReadMessageCount > 0
             ? (
@@ -120,6 +121,7 @@ export const NotificationListener = () => {
                   transform: translate(-50%, -50%);
                   border-radius: 9999px;
                 `}
+                aria-hidden
               >
                 {notReadMessageCount}
               </Box>
@@ -137,7 +139,13 @@ export const NotificationListener = () => {
         css={css`
           max-width: min(var(--radix-popover-content-available-width), 24rem);
           max-height: min(var(--radix-popover-content-available-height), 16rem);
+
+          &:focus-visible {
+            outline: 2px solid var(--accent-9);
+          }
         `}
+        tabIndex={0}
+        aria-label="알림 목록"
       >
         {messages.length > 0
           ? (
