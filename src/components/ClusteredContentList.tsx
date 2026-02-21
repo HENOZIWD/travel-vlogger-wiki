@@ -57,7 +57,7 @@ export const ClusteredContentList = ({ features }: ClusteredContentListProps) =>
           gap: 0.75rem;
           max-height: 24rem;
           overflow-y: auto;
-          padding-right: 0.5rem;
+          padding-right: 0.75rem;
         `}
       >
         {chunkedFeatures[page].map((feature) => {
@@ -73,7 +73,8 @@ export const ClusteredContentList = ({ features }: ClusteredContentListProps) =>
       <ul css={css`
           display: flex;
           gap: 0.25rem;
-          padding-top: 0.5rem;
+          padding: 0.5rem 0;
+          padding-right: 0.75rem;
           justify-content: center;
         `}
       >

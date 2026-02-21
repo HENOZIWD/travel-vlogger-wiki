@@ -137,7 +137,7 @@ export const Search = () => {
                     outline: none;
                     flex-grow: 1;
                     font-size: 1rem;
-                    color: var(--accent-10);
+                    background-color: var(--color-panel-solid);
                   `}
                   aria-label="검색어 입력"
                 />

@@ -1,5 +1,13 @@
 @import '@radix-ui/themes/styles.css';
 
+:root {
+  --marker-font-weight: 700;
+}
+
+.dark {
+  --marker-font-weight: 400;
+}
+
 .radix-themes {
   width: 100vw;
   height: 100vh;
@@ -17,4 +25,14 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* @vis.gl/react-google-maps <InfoWindow> style */
+.gm-style-iw,
+.gm-style-iw-tc::after {
+  background-color: var(--gray-2) !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
 }

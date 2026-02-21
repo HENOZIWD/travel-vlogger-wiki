@@ -38,10 +38,10 @@ export const Marker = ({ position, data }: MarkerProps) => {
           thumbnailHigh={data.channel.thumbnailHigh}
         />
         <div css={css`
-            text-shadow: -2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;
-            color: white;
+            text-shadow: 0px -2px var(--gray-1), -2px 0px var(--gray-1), 2px 0px var(--gray-1), 0px 2px var(--gray-1);
+            color: var(--gray-12);
             font-size: 0.875rem;
-            font-weight: 400;
+            font-weight: var(--marker-font-weight);
           `}
         >
           {data.channel.title}
