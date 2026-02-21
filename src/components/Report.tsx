@@ -140,12 +140,11 @@ export const Report = ({ historyId, editorId }: ReportProps) => {
                   </Dialog.Close>
                   <Button
                     type="submit"
-                    color="red"
                     disabled={!selectedOption || mutation.isPending}
                     loading={mutation.isPending}
                     css={css`
                       &:not(:disabled) {
-                        background-color: var(--accent-11);
+                        background-color: var(--report-submit-button-background);
                       }
                     `}
                   >

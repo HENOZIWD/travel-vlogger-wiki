@@ -104,6 +104,10 @@ export const Search = () => {
               css={css`
                 border: 1px solid var(--accent-10);
                 border-radius: var(--radius-2);
+
+                 &:has(input:focus) {
+                  outline: 2px solid var(--accent-10);
+                 }
               `}
             >
               <Flex
@@ -155,6 +159,7 @@ export const Search = () => {
             gap="2"
             maxHeight="13rem"
             overflowY="auto"
+            p="1"
           >
             {searchedTags.map((tag) => (
               <Button
