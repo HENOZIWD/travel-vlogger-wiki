@@ -24,15 +24,10 @@ export const Marker = ({ position, data }: MarkerProps) => {
           flex-direction: column;
           align-items: center;
           cursor: pointer;
-          color: black;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-shadow: var(--gray-10) 0 0 0.5rem;
           text-decoration: none;
 
           &:hover {
             transform: scale(1.125);
-            color: black;
           }
         `}
       >
@@ -42,7 +37,13 @@ export const Marker = ({ position, data }: MarkerProps) => {
           thumbnailMedium={data.channel.thumbnailMedium}
           thumbnailHigh={data.channel.thumbnailHigh}
         />
-        <div>
+        <div css={css`
+            text-shadow: -2px 0px black, 0px 2px black, 2px 0px black, 0px -2px black;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 400;
+          `}
+        >
           {data.channel.title}
         </div>
       </Link>

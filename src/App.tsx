@@ -15,6 +15,7 @@ import { Suspense } from 'react';
 import { SuspenseFallback } from './components/SuspenseFallback';
 import { SearchContentResult } from './components/SearchContentResult';
 import { ContentRegisterButton } from './components/ContentRegisterButton';
+import { ThemeToggleButton } from './components/ThemeToggleButton';
 
 export const App = () => {
   return (
@@ -92,6 +93,7 @@ export const App = () => {
         >
           <Search />
           <NotificationListener />
+          <ThemeToggleButton />
           <ContentRegisterButton />
           <WorldMap>
             <ContentList />

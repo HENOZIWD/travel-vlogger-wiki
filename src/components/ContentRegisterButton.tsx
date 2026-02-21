@@ -16,7 +16,7 @@ export const ContentRegisterButton = () => {
       css={css`
         position: absolute;
         z-index: 9999;
-        top: 5rem;
+        top: 9rem;
         right: 1rem;
       `}
     >
