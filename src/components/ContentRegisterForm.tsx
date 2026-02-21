@@ -4,7 +4,7 @@ import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
 import { useMutation } from '@tanstack/react-query';
 import { registerContent } from '../apis/registerContent';
 import { useNavigate } from 'react-router';
-import { Box, Button, DataList, Flex, Text, TextField } from '@radix-ui/themes';
+import { Box, Button, DataList, Flex, Heading, Text, TextField } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { useForm, useWatch, type Control } from 'react-hook-form';
 import { usePosition } from '../hooks/usePosition';
@@ -35,6 +35,7 @@ export const ContentRegisterForm = () => {
 
   useEffect(() => {
     resetPosition();
+    return () => resetPosition();
   }, [resetPosition]);
 
   const onSubmit = (data: ContentInputs) => {
@@ -53,6 +54,13 @@ export const ContentRegisterForm = () => {
 
   return (
     <>
+      <Heading
+        as="h1"
+        m="4"
+        align="center"
+      >
+        콘텐츠 등록하기
+      </Heading>
       <VideoPreview control={control} />
       <Flex
         asChild
@@ -168,5 +176,10 @@ const VideoPreview = ({ control }: { control: Control<ContentInputs> }) => {
 
   if (!videoId) return null;
 
-  return <EmbedYoutubePlayer id={videoId} />;
+  return (
+    <EmbedYoutubePlayer
+      id={videoId}
+      title="등록할 콘텐츠 미리보기"
+    />
+  );
 };

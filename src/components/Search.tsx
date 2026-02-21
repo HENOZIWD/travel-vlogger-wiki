@@ -75,6 +75,7 @@ export const Search = () => {
             top: 1rem;
             left: 1rem;
           `}
+          aria-label="콘텐츠 검색"
         >
           <MagnifyingGlassIcon
             width="1.5rem"
@@ -138,9 +139,13 @@ export const Search = () => {
                     font-size: 1rem;
                     color: var(--accent-10);
                   `}
+                  aria-label="검색어 입력"
                 />
               </Flex>
-              <IconButton type="submit">
+              <IconButton
+                type="submit"
+                aria-label="검색하기"
+              >
                 <MagnifyingGlassIcon />
               </IconButton>
             </Flex>

@@ -4,9 +4,17 @@ import { getContentHistory } from '../apis/getContentHistory';
 import { Flex, Heading } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { History } from './History';
+import { usePosition } from '../hooks/usePosition';
+import { useEffect } from 'react';
 
 export const ContentHistory = () => {
   const { contentId } = useParams();
+  const { resetPosition } = usePosition();
+
+  useEffect(() => {
+    resetPosition();
+    return () => resetPosition();
+  }, [resetPosition]);
 
   const { data } = useSuspenseQuery({
     queryKey: ['contentHistory', contentId],

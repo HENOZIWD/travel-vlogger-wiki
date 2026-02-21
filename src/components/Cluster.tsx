@@ -30,7 +30,8 @@ export const Cluster = ({
       position={position}
       onClick={handleClick}
     >
-      <div css={css`
+      <div
+        css={css`
           display: flex;
           align-items: center;
           justify-content: center;
@@ -47,8 +48,9 @@ export const Cluster = ({
             transform: scale(1.125);
           }
         `}
+        aria-label={`${markerCount}개의 콘텐츠가 모여 있음`}
       >
-        {markerCount}
+        <span aria-hidden>{markerCount}</span>
       </div>
     </AdvancedMarker>
   );

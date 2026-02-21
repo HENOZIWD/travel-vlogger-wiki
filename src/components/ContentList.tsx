@@ -127,6 +127,7 @@ export const ContentList = () => {
           <InfoWindow
             anchor={infoWindowData.anchor}
             onClose={() => setInfoWindowData(null)}
+            ariaLabel="콘텐츠 목록"
           >
             <ErrorBoundary>
               <ClusteredContentList features={infoWindowData.features} />
@@ -134,7 +135,7 @@ export const ContentList = () => {
           </InfoWindow>
         )
         : null}
-      {!isLastFetched && !isDragging
+      {!isLastFetched && !isDragging && !(isRegistering || isEditing)
         ? (
           <Button
             type="button"

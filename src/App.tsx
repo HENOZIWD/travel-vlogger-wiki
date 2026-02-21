@@ -4,7 +4,7 @@ import { ContentRegisterForm } from './components/ContentRegisterForm';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { ContentDetail } from './components/ContentDetail';
 import { Link, Route, Routes, useLocation } from 'react-router';
-import { Box, IconButton } from '@radix-ui/themes';
+import { IconButton } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
@@ -38,58 +38,61 @@ export const App = () => {
           }
         `}
       >
-        <Routes>
-          <Route
-            path="register"
-            element={(
-              <Drawer>
-                <ErrorBoundary>
-                  <ContentRegisterForm />
-                </ErrorBoundary>
-              </Drawer>
-            )}
-          />
-          <Route
-            path="content/:contentId"
-            element={(
-              <Drawer>
-                <ErrorBoundary>
-                  <Suspense fallback={<SuspenseFallback />}>
-                    <ContentDetail />
-                  </Suspense>
-                </ErrorBoundary>
-              </Drawer>
-            )}
-          />
-          <Route
-            path="content/:contentId/history"
-            element={(
-              <Drawer>
-                <ErrorBoundary>
-                  <Suspense fallback={<SuspenseFallback />}>
-                    <ContentHistory />
-                  </Suspense>
-                </ErrorBoundary>
-              </Drawer>
-            )}
-          />
-          <Route
-            path="search"
-            element={(
-              <Drawer>
-                <ErrorBoundary>
-                  <Suspense fallback={<SuspenseFallback />}>
-                    <SearchContentResult />
-                  </Suspense>
-                </ErrorBoundary>
-              </Drawer>
-            )}
-          />
-        </Routes>
-        <Box
-          width="100%"
-          height="100%"
-          position="relative"
+        <aside>
+          <Routes>
+            <Route
+              path="register"
+              element={(
+                <Drawer>
+                  <ErrorBoundary>
+                    <ContentRegisterForm />
+                  </ErrorBoundary>
+                </Drawer>
+              )}
+            />
+            <Route
+              path="content/:contentId"
+              element={(
+                <Drawer>
+                  <ErrorBoundary>
+                    <Suspense fallback={<SuspenseFallback />}>
+                      <ContentDetail />
+                    </Suspense>
+                  </ErrorBoundary>
+                </Drawer>
+              )}
+            />
+            <Route
+              path="content/:contentId/history"
+              element={(
+                <Drawer>
+                  <ErrorBoundary>
+                    <Suspense fallback={<SuspenseFallback />}>
+                      <ContentHistory />
+                    </Suspense>
+                  </ErrorBoundary>
+                </Drawer>
+              )}
+            />
+            <Route
+              path="search"
+              element={(
+                <Drawer>
+                  <ErrorBoundary>
+                    <Suspense fallback={<SuspenseFallback />}>
+                      <SearchContentResult />
+                    </Suspense>
+                  </ErrorBoundary>
+                </Drawer>
+              )}
+            />
+          </Routes>
+        </aside>
+        <main css={css`
+            width: 100%;
+            height: 100%;
+            position: relative;
+          `}
         >
           <Search />
           <NotificationListener />
@@ -105,7 +108,10 @@ export const App = () => {
                   right: 1rem;
                 `}
               >
-                <Link to="/register">
+                <Link
+                  to="/register"
+                  aria-label="콘텐츠 등록하기"
+                >
                   <PlusIcon
                     width="1.5rem"
                     height="1.5rem"
@@ -118,7 +124,7 @@ export const App = () => {
             <ContentList />
             <SelectedPosition />
           </WorldMap>
-        </Box>
+        </main>
       </div>
     </APIProvider>
   );
