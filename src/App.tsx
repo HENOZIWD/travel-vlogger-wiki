@@ -1,10 +1,8 @@
 import { ContentList } from './components/ContentList';
 import { WorldMap } from './components/WorldMap';
 import { ContentRegisterForm } from './components/ContentRegisterForm';
-import { PlusIcon } from '@radix-ui/react-icons';
 import { ContentDetail } from './components/ContentDetail';
-import { Link, Route, Routes, useLocation } from 'react-router';
-import { IconButton } from '@radix-ui/themes';
+import { Route, Routes } from 'react-router';
 import { css } from '@emotion/react';
 import { SelectedPosition } from './components/SelectedPosition';
 import { NotificationListener } from './components/NotificationListener';
@@ -16,11 +14,10 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Suspense } from 'react';
 import { SuspenseFallback } from './components/SuspenseFallback';
 import { SearchContentResult } from './components/SearchContentResult';
+import { ContentRegisterButton } from './components/ContentRegisterButton';
+import { ThemeToggleButton } from './components/ThemeToggleButton';
 
 export const App = () => {
-  const location = useLocation();
-  const isRegistering = location.pathname === '/register';
-
   return (
     <APIProvider
       apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
@@ -96,30 +93,8 @@ export const App = () => {
         >
           <Search />
           <NotificationListener />
-          {!isRegistering
-            ? (
-              <IconButton
-                asChild
-                size="4"
-                css={css`
-                  position: absolute;
-                  z-index: 9999;
-                  top: 5rem;
-                  right: 1rem;
-                `}
-              >
-                <Link
-                  to="/register"
-                  aria-label="콘텐츠 등록하기"
-                >
-                  <PlusIcon
-                    width="1.5rem"
-                    height="1.5rem"
-                  />
-                </Link>
-              </IconButton>
-            )
-            : null}
+          <ThemeToggleButton />
+          <ContentRegisterButton />
           <WorldMap>
             <ContentList />
             <SelectedPosition />

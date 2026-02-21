@@ -3,6 +3,7 @@ import { Map, type MapMouseEvent } from '@vis.gl/react-google-maps';
 import { type ReactNode } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { usePosition } from '../hooks/usePosition';
+import { useTheme } from '../hooks/useTheme';
 
 const defaultPosition = {
   lat: 37.5664056,
@@ -24,6 +25,8 @@ export const WorldMap = ({ children }: WorldMapProps) => {
   const { setPosition } = usePosition();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+
+  const { theme } = useTheme();
 
   const isRegistering = location.pathname === '/register';
   const isEditing = searchParams.get('edit') === 'true';
@@ -52,6 +55,7 @@ export const WorldMap = ({ children }: WorldMapProps) => {
       restriction={restriction}
       fullscreenControl={false}
       onClick={isRegistering || isEditing ? handleClick : undefined}
+      colorScheme={theme === 'dark' ? 'DARK' : 'LIGHT'}
     >
       {children}
     </Map>
