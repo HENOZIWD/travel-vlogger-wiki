@@ -1,14 +1,11 @@
 import { css } from '@emotion/react';
-import { Map, type MapMouseEvent } from '@vis.gl/react-google-maps';
-import { type ReactNode } from 'react';
+import { Map, useMap, type MapMouseEvent } from '@vis.gl/react-google-maps';
+import { useEffect, type ReactNode } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { usePosition } from '../hooks/usePosition';
 import { useTheme } from '../hooks/useTheme';
+import { useMapViewport } from '../hooks/useMapViewport';
 
-const defaultPosition = {
-  lat: 37.5664056,
-  lng: 126.9778222,
-};
 const restriction = {
   latLngBounds: {
     west: -180,
@@ -28,6 +25,33 @@ export const WorldMap = ({ children }: WorldMapProps) => {
 
   const { theme } = useTheme();
 
+  const map = useMap();
+  const { mapViewport, setMapViewport } = useMapViewport();
+
+  useEffect(() => {
+    if (!map) return;
+
+    const updateViewPort = () => {
+      const bounds = map.getBounds()?.toJSON();
+      const center = map.getCenter()?.toJSON();
+      const zoom = map.getZoom();
+
+      if (!bounds || !center || !zoom) return;
+
+      setMapViewport({
+        bounds,
+        center,
+        zoom,
+      });
+    };
+
+    const listener = map.addListener('idle', updateViewPort);
+
+    // updateViewPort();
+
+    return () => listener.remove();
+  }, [map, setMapViewport]);
+
   const isRegistering = location.pathname === '/register';
   const isEditing = searchParams.get('edit') === 'true';
 
@@ -45,8 +69,8 @@ export const WorldMap = ({ children }: WorldMapProps) => {
         height: 100%;
         position: relative;
       `}
-      defaultCenter={defaultPosition}
-      defaultZoom={7}
+      defaultCenter={mapViewport.center}
+      defaultZoom={mapViewport.zoom}
       minZoom={3}
       maxZoom={18}
       streetViewControl={false}

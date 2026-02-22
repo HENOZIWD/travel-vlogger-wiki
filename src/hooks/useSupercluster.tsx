@@ -23,7 +23,17 @@ export const useSupercluster = <T extends GeoJsonProperties>(
   }, [clusterer, geojson]);
 
   // get bounding-box and zoomlevel from the map
-  const { bbox, zoom } = useMapViewport({ padding: 100 });
+  const { mapViewport } = useMapViewport();
+
+  const padding = 100;
+  const degreesPerPixel = (360 / (Math.pow(2, mapViewport.zoom) * 256));
+  const paddingDegrees = degreesPerPixel * padding;
+  const isFullLng = mapViewport.zoom <= 3;
+
+  const w = isFullLng ? -180 : mapViewport.bounds.west - paddingDegrees;
+  const e = isFullLng ? 180 : mapViewport.bounds.east + paddingDegrees;
+  const s = Math.max(-90, mapViewport.bounds.south - paddingDegrees);
+  const n = Math.min(90, mapViewport.bounds.north + paddingDegrees);
 
   // retrieve the clusters within the current viewport
   const clusters = useMemo(() => {
@@ -31,8 +41,8 @@ export const useSupercluster = <T extends GeoJsonProperties>(
     // otherwise getClusters will crash
     if (!clusterer || version === 0) return [];
 
-    return clusterer.getClusters(bbox, zoom);
-  }, [version, clusterer, bbox, zoom]);
+    return clusterer.getClusters([w, s, e, n], mapViewport.zoom);
+  }, [version, clusterer, w, s, e, n, mapViewport.zoom]);
 
   // create callbacks to expose supercluster functionality outside of this hook
   const getChildren = useCallback(
