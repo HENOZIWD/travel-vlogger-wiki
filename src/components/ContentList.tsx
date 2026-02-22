@@ -26,7 +26,6 @@ export const ContentList = () => {
   const [mapState, setMapState] = useState<MapState | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isLastFetched, setIsLastFetched] = useState(true);
-  const [isZoomEnough, setIsZoomEnough] = useState(false);
 
   const {
     isLoading,
@@ -67,7 +66,6 @@ export const ContentList = () => {
         zoom,
       });
       setIsDragging(false);
-      setIsZoomEnough(zoom >= 7);
       if (isFirstFetched) {
         setIsLastFetched(false);
       }
@@ -156,9 +154,8 @@ export const ContentList = () => {
             `}
             onClick={handleRefetch}
             loading={isFetching}
-            disabled={isFetching || !isZoomEnough}
           >
-            {isZoomEnough ? '이 지역 검색' : '확대하여 검색'}
+            이 지역 검색
           </Button>
         )
         : null}
