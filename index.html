@@ -10,7 +10,7 @@
     <title>travel-vlogger-wiki</title>
 
     <script>
-      (function() {
+      (() => {
         const storageTheme = localStorage.getItem('theme');
         const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         let theme = systemTheme;

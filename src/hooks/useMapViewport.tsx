@@ -1,54 +1,33 @@
-import { useMap } from '@vis.gl/react-google-maps';
-import { useEffect, useState } from 'react';
-import { type BBox } from 'geojson';
+import { atomWithStorage } from 'jotai/utils';
+import { useAtom } from 'jotai';
 
-type MapViewportOptions = { padding?: number };
+interface MapViewport {
+  bounds: google.maps.LatLngBoundsLiteral;
+  center: google.maps.LatLngLiteral;
+  zoom: number;
+}
 
-export const useMapViewport = ({ padding = 0 }: MapViewportOptions = {}) => {
-  const map = useMap();
-  const [bbox, setBbox] = useState<BBox>([-180, -90, 180, 90]);
-  const [zoom, setZoom] = useState(0);
-
-  // observe the map to get current bounds
-  useEffect(() => {
-    if (!map) return;
-
-    const setViewPort = () => {
-      const bounds = map.getBounds();
-      const zoom = map.getZoom();
-      const projection = map.getProjection();
-
-      if (!bounds || !zoom || !projection) return;
-
-      const sw = bounds.getSouthWest();
-      const ne = bounds.getNorthEast();
-
-      const paddingDegrees = degreesPerPixel(zoom) * padding;
-
-      const n = Math.min(90, ne.lat() + paddingDegrees);
-      const s = Math.max(-90, sw.lat() - paddingDegrees);
-
-      const w = sw.lng() - paddingDegrees;
-      const e = ne.lng() + paddingDegrees;
-
-      setBbox([w, s, e, n]);
-      setZoom(zoom);
-    };
-
-    const listener = map.addListener('idle', setViewPort);
-
-    setViewPort(); // initial clustering
-
-    return () => listener.remove();
-  }, [map, padding]);
-
-  return {
-    bbox,
-    zoom,
-  };
+const defaultMapViewport: MapViewport = {
+  bounds: {
+    west: -180,
+    south: -90,
+    east: 180,
+    north: 90,
+  },
+  center: {
+    lat: 37.5664056,
+    lng: 126.9778222,
+  },
+  zoom: 7,
 };
 
-function degreesPerPixel(zoomLevel: number) {
-  // 360° divided by the number of pixels at the zoom-level
-  return 360 / (Math.pow(2, zoomLevel) * 256);
-}
+const mapViewportAtom = atomWithStorage<MapViewport>('mapViewport', defaultMapViewport);
+
+export const useMapViewport = () => {
+  const [mapViewport, setMapViewport] = useAtom(mapViewportAtom);
+
+  return {
+    mapViewport,
+    setMapViewport,
+  };
+};

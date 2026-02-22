@@ -7,26 +7,20 @@ import type { Feature, FeatureCollection, Point } from 'geojson';
 import { ClusteredContentList } from './ClusteredContentList';
 import { InfoWindow, useMap } from '@vis.gl/react-google-maps';
 import { ErrorBoundary } from './ErrorBoundary';
-import { debounce } from '../utils/debounce';
 import { Button } from '@radix-ui/themes';
 import { css } from '@emotion/react';
+import { useMapViewport } from '../hooks/useMapViewport';
 
 const emptyGeojson: FeatureCollection<Point> = {
   type: 'FeatureCollection',
   features: [],
 };
 
-interface MapState {
-  bound: google.maps.LatLngBoundsLiteral;
-  zoom: number;
-}
-
 export const ContentList = () => {
-  const map = useMap();
-  const [mapState, setMapState] = useState<MapState | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isLastFetched, setIsLastFetched] = useState(true);
-  const [isZoomEnough, setIsZoomEnough] = useState(false);
+
+  const { mapViewport } = useMapViewport();
 
   const {
     isLoading,
@@ -36,18 +30,12 @@ export const ContentList = () => {
     isFetching,
   } = useQuery({
     queryKey: ['contentList'],
-    queryFn: () => getContents(mapState!.bound),
-    enabled: !!mapState,
+    queryFn: () => getContents(mapViewport!.bounds),
+    enabled: !!mapViewport,
     placeholderData: (prev) => prev,
   });
 
-  const debouncedUpdateMapState = useMemo(
-    () => debounce(({ bound, zoom }: MapState) => setMapState({
-      bound,
-      zoom,
-    }), 250),
-    [],
-  );
+  const map = useMap();
 
   useEffect(() => {
     if (!map) return;
@@ -57,17 +45,7 @@ export const ContentList = () => {
     });
 
     const idleListener = map.addListener('idle', () => {
-      const bound = map.getBounds()?.toJSON();
-      const zoom = map.getZoom();
-
-      if (!bound || !zoom) return;
-
-      debouncedUpdateMapState({
-        bound,
-        zoom,
-      });
       setIsDragging(false);
-      setIsZoomEnough(zoom >= 7);
       if (isFirstFetched) {
         setIsLastFetched(false);
       }
@@ -77,7 +55,7 @@ export const ContentList = () => {
       google.maps.event.removeListener(dragstartListener);
       google.maps.event.removeListener(idleListener);
     };
-  }, [debouncedUpdateMapState, map, isFirstFetched]);
+  }, [map, isFirstFetched]);
 
   const [infoWindowData, setInfoWindowData] = useState<{
     anchor: google.maps.marker.AdvancedMarkerElement;
@@ -112,7 +90,7 @@ export const ContentList = () => {
     setIsLastFetched(true);
   };
 
-  if (isLoading || !mapState) return null;
+  if (isLoading) return null;
 
   return (
     <>
@@ -156,9 +134,8 @@ export const ContentList = () => {
             `}
             onClick={handleRefetch}
             loading={isFetching}
-            disabled={isFetching || !isZoomEnough}
           >
-            {isZoomEnough ? '이 지역 검색' : '확대하여 검색'}
+            이 지역 검색
           </Button>
         )
         : null}
