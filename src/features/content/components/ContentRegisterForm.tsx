@@ -1,0 +1,185 @@
+import { getVideoIdFromYoutubeURL } from '../utils/url';
+import { Suspense, useEffect, useState } from 'react';
+import { EmbedYoutubePlayer } from './EmbedYoutubePlayer';
+import { useMutation } from '@tanstack/react-query';
+import { registerContent } from '../apis/registerContent';
+import { useNavigate } from 'react-router';
+import { Box, Button, DataList, Flex, Heading, Text, TextField } from '@radix-ui/themes';
+import { css } from '@emotion/react';
+import { useForm, useWatch, type Control } from 'react-hook-form';
+import { usePosition } from '../../shared/hooks/usePosition';
+import { TagSelector } from './TagSelector';
+import type { Tag } from '../../shared/utils/type';
+import { ErrorMessage } from '../../shared/components/ErrorMessage';
+import { ErrorBoundary } from '../../shared/components/ErrorBoundary';
+import { SuspenseFallback } from '../../shared/components/SuspenseFallback';
+
+interface ContentInputs { url: string }
+
+export const ContentRegisterForm = () => {
+  const { register, formState, handleSubmit, control } = useForm<ContentInputs>({
+    defaultValues: { url: '' },
+    mode: 'all',
+  });
+  const { position, resetPosition } = usePosition();
+
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: registerContent,
+    onSuccess: () => {
+      closeForm();
+    },
+  });
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    resetPosition();
+    return () => resetPosition();
+  }, [resetPosition]);
+
+  const onSubmit = (data: ContentInputs) => {
+    if (!position || !getVideoIdFromYoutubeURL(data.url)) return;
+
+    mutation.mutate({
+      url: data.url,
+      position,
+      tags,
+    });
+  };
+
+  const closeForm = () => {
+    navigate('/');
+  };
+
+  return (
+    <>
+      <Heading
+        as="h1"
+        m="4"
+        align="center"
+      >
+        콘텐츠 등록하기
+      </Heading>
+      <VideoPreview control={control} />
+      <Flex
+        asChild
+        direction="column"
+        p="4"
+        gap="4"
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box>
+            <label htmlFor="url">
+              <Text
+                as="div"
+                size="2"
+                mb="1"
+              >
+                Youtube 링크
+              </Text>
+              <TextField.Root
+                placeholder="Youtube 링크를 입력해주세요."
+                size="3"
+                type="text"
+                id="url"
+                {...register('url', {
+                  validate: (value) => {
+                    const extractedId = getVideoIdFromYoutubeURL(value);
+                    if (!extractedId) return 'Youtube 링크가 유효하지 않습니다.';
+                    return true;
+                  },
+                })}
+                aria-invalid={formState.errors.url ? 'true' : 'false'}
+                color={formState.errors.url ? 'red' : undefined}
+                css={css`
+                ${formState.errors.url ? 'border: 1px solid red;' : ''}
+              `}
+              />
+            </label>
+            {formState.errors.url
+              ? (
+                <Text
+                  as="div"
+                  color="red"
+                  role="alert"
+                  mt="2"
+                >
+                  {formState.errors.url.message}
+                </Text>
+              )
+              : null}
+          </Box>
+          {position
+            ? (
+              <DataList.Root>
+                <DataList.Item align="center">
+                  <DataList.Label minWidth="2.5rem">위도</DataList.Label>
+                  <DataList.Value>{position.lat}</DataList.Value>
+                </DataList.Item>
+                <DataList.Item align="center">
+                  <DataList.Label minWidth="2.5rem">경도</DataList.Label>
+                  <DataList.Value>{position.lng}</DataList.Value>
+                </DataList.Item>
+              </DataList.Root>
+            )
+            : (
+              <Text>지도를 클릭해 등록할 위치를 선택해주세요.</Text>
+            )}
+          <ErrorBoundary>
+            <Suspense fallback={<SuspenseFallback />}>
+              <TagSelector
+                tags={tags}
+                setTags={setTags}
+              />
+            </Suspense>
+          </ErrorBoundary>
+          <Flex justify="end">
+            <Button
+              type="submit"
+              disabled={!formState.isValid || !position || mutation.isPending}
+              loading={mutation.isPending}
+              variant="solid"
+              size="2"
+            >
+              등록하기
+            </Button>
+          </Flex>
+          {mutation.isError
+            ? (
+              <ErrorMessage
+                message={mutation.error.message}
+                role="alert"
+              />
+            )
+            : null}
+        </form>
+      </Flex>
+    </>
+  );
+};
+
+const VideoPreview = ({ control }: { control: Control<ContentInputs> }) => {
+  const url = useWatch({
+    control,
+    name: 'url',
+  });
+  const [id, setId] = useState<string>();
+
+  const extractedId = getVideoIdFromYoutubeURL(url);
+
+  if (extractedId && extractedId !== id) {
+    setId(extractedId);
+  }
+
+  const videoId = extractedId || id;
+
+  if (!videoId) return null;
+
+  return (
+    <EmbedYoutubePlayer
+      id={videoId}
+      title="등록할 콘텐츠 미리보기"
+    />
+  );
+};

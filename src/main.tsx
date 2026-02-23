@@ -5,7 +5,7 @@ import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Theme } from '@radix-ui/themes';
-import { ErrorBoundary } from './components/ErrorBoundary.tsx';
+import { ErrorBoundary } from './features/shared/components/ErrorBoundary.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
