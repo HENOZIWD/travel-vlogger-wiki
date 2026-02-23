@@ -1,21 +1,21 @@
-import { ContentList } from './components/ContentList';
-import { WorldMap } from './components/WorldMap';
-import { ContentRegisterForm } from './components/ContentRegisterForm';
-import { ContentDetail } from './components/ContentDetail';
+import { ContentList } from './features/marker/components/ContentList';
+import { WorldMap } from './features/map/components/WorldMap';
+import { ContentRegisterForm } from './features/content/components/ContentRegisterForm';
+import { ContentDetail } from './features/content/components/ContentDetail';
 import { Route, Routes } from 'react-router';
 import { css } from '@emotion/react';
-import { SelectedPosition } from './components/SelectedPosition';
-import { NotificationListener } from './components/NotificationListener';
-import { Search } from './components/Search';
+import { SelectedPosition } from './features/map/components/SelectedPosition';
+import { NotificationListener } from './features/notification/components/NotificationListener';
+import { Search } from './features/search/components/Search';
 import { APIProvider } from '@vis.gl/react-google-maps';
-import { ContentHistory } from './components/ContentHistory';
-import { Drawer } from './components/Drawer';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ContentHistory } from './features/history/components/ContentHistory';
+import { Drawer } from './features/shared/components/Drawer';
+import { ErrorBoundary } from './features/shared/components/ErrorBoundary';
 import { Suspense } from 'react';
-import { SuspenseFallback } from './components/SuspenseFallback';
-import { SearchContentResult } from './components/SearchContentResult';
-import { ContentRegisterButton } from './components/ContentRegisterButton';
-import { ThemeToggleButton } from './components/ThemeToggleButton';
+import { SuspenseFallback } from './features/shared/components/SuspenseFallback';
+import { SearchContentResult } from './features/search/components/SearchContentResult';
+import { ContentRegisterButton } from './features/content/components/ContentRegisterButton';
+import { ThemeToggleButton } from './features/theme/components/ThemeToggleButton';
 
 export const App = () => {
   return (
