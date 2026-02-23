@@ -7,6 +7,13 @@ import { Notification, type NotificationProps as NotificationType } from './Noti
 import { useQueryClient } from '@tanstack/react-query';
 import { safeParseJSON } from '../utils/json';
 
+interface EventMessage {
+  contentId: string;
+  type: 'SUCCESS' | 'FAILED';
+  message: string;
+  timestamp: number;
+}
+
 export const NotificationListener = () => {
   const [sessionId] = useState(() => {
     const id = getSessionId();
@@ -38,7 +45,7 @@ export const NotificationListener = () => {
       };
 
       eventSourceRef.current.onmessage = async (e) => {
-        const data: NotificationType = safeParseJSON(e.data);
+        const data: EventMessage = safeParseJSON(e.data);
         if (!data) return;
         setMessages((prev) => [{
           ...data,
@@ -47,7 +54,7 @@ export const NotificationListener = () => {
         if (data.type === 'SUCCESS') {
           await Promise.all([
             queryClient.invalidateQueries({ queryKey: ['contentList'] }),
-            queryClient.invalidateQueries({ queryKey: ['contentDetail'] }),
+            queryClient.invalidateQueries({ queryKey: ['contentDetail', data.contentId] }),
           ]);
         }
         setNotReadMessageCount((prev) => prev + 1);
