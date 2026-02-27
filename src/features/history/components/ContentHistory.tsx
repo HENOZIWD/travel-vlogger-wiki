@@ -6,6 +6,9 @@ import { css } from '@emotion/react';
 import { History } from './History';
 import { usePosition } from '../../shared/hooks/usePosition';
 import { useEffect } from 'react';
+import { usePage } from '../../shared/hooks/usePage';
+
+const CONTENT_COUNT_PER_PAGE = 10;
 
 export const ContentHistory = () => {
   const { contentId } = useParams();
@@ -19,6 +22,11 @@ export const ContentHistory = () => {
   const { data } = useSuspenseQuery({
     queryKey: ['contentHistory', contentId],
     queryFn: () => getContentHistory({ id: contentId }),
+  });
+
+  const { currentPageData, paginationElement } = usePage({
+    data,
+    dataAmountPerPage: CONTENT_COUNT_PER_PAGE,
   });
 
   if (!contentId) return null;
@@ -42,13 +50,14 @@ export const ContentHistory = () => {
         p="2"
       >
         <ul>
-          {data.map((history) => (
+          {currentPageData.map((history) => (
             <li key={history.id}>
               <History data={history} />
             </li>
           ))}
         </ul>
       </Flex>
+      {paginationElement}
     </div>
   );
 };
