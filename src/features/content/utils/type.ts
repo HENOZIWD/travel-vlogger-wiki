@@ -6,8 +6,6 @@ export interface ContentDetail {
   publishedAt: string;
   viewCount: string;
   likeCount: string;
-  lastEditorAddress: string;
-  lastEditorId: string;
   channel: {
     id: string;
     title: string;
