@@ -1,7 +1,7 @@
 import { useParams } from 'react-router';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getContentHistory } from '../apis/getContentHistory';
-import { Flex, Heading } from '@radix-ui/themes';
+import { Flex, Heading, Text } from '@radix-ui/themes';
 import { css } from '@emotion/react';
 import { History } from './History';
 import { usePosition } from '../../shared/hooks/usePosition';
@@ -49,13 +49,24 @@ export const ContentHistory = () => {
         gap="2"
         p="2"
       >
-        <ul>
-          {currentPageData.map((history) => (
-            <li key={history.id}>
-              <History data={history} />
-            </li>
-          ))}
-        </ul>
+        {currentPageData.length > 0
+          ? (
+            <ul>
+              {currentPageData.map((history) => (
+                <li key={history.id}>
+                  <History data={history} />
+                </li>
+              ))}
+            </ul>
+          )
+          : (
+            <Text
+              as="div"
+              align="center"
+            >
+              편집 기록이 없습니다.
+            </Text>
+          )}
       </Flex>
       {paginationElement}
     </div>
