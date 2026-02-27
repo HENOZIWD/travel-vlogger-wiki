@@ -16,6 +16,7 @@ export const Marker = ({ position, data }: MarkerProps) => {
     <AdvancedMarker
       position={position}
       ref={markerRef}
+      anchorTop="-50%"
     >
       <Link
         to={`/content/${data.id}`}
