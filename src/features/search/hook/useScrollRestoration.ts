@@ -1,34 +1,38 @@
 import { useAtom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
-import { useLayoutEffect, useMemo, useRef } from 'react';
-import { throttle } from '../utils/throttle';
+import { useLayoutEffect, useRef } from 'react';
 
-const storage = createJSONStorage<number>(() => sessionStorage);
-const scrollAtom = atomWithStorage<number>('scroll', 0, storage);
+type Scroll = Record<string, number>;
 
-export const useScrollRestoration = <T extends HTMLElement>() => {
+const storage = createJSONStorage<Scroll>(() => sessionStorage);
+const scrollAtom = atomWithStorage<Scroll>('scroll', {}, storage);
+
+export const useScrollRestoration = <T extends HTMLElement>(key: string) => {
   const scrollRef = useRef<T>(null);
   const [scroll, setScroll] = useAtom(scrollAtom);
-
-  const throttledSaveScroll = useMemo(
-    () => throttle((pos: number) => setScroll(pos), 500),
-    [setScroll],
-  );
 
   useLayoutEffect(() => {
     const scrollBox = scrollRef.current;
     if (!scrollBox) return;
 
-    scrollBox.scrollTop = scroll ?? 0;
+    scrollBox.scrollTop = scroll[key] ?? 0;
 
-    const handleScroll = () => throttledSaveScroll(scrollBox.scrollTop);
-    scrollBox.addEventListener('scroll', handleScroll, { passive: true });
+    const handleScroll = () => {
+      setScroll((prev) => ({
+        ...prev,
+        [key]: scrollBox.scrollTop,
+      }));
+    };
+    scrollBox.addEventListener('scrollend', handleScroll, { passive: true });
 
     return () => {
-      scrollBox.removeEventListener('scroll', handleScroll);
-      setScroll(scrollBox.scrollTop);
+      scrollBox.removeEventListener('scrollend', handleScroll);
+      setScroll((prev) => ({
+        ...prev,
+        [key]: scrollBox.scrollTop,
+      }));
     };
-  }, []);
+  }, [key]);
 
   return scrollRef;
 };
