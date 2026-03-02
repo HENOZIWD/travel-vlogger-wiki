@@ -29,11 +29,21 @@ ul {
 }
 
 /* @vis.gl/react-google-maps <InfoWindow> style */
-.gm-style-iw,
-.gm-style-iw-tc::after {
+.gm-style-iw {
   background-color: var(--gray-2) !important;
+}
+
+.gm-style-iw-c {
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+  max-height: none !important;
 }
 
 .gm-style-iw-d {
   overflow: hidden !important;
+  max-height: none !important;
+}
+
+.gm-style-iw-tc {
+  display: none;
 }

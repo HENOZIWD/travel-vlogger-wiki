@@ -2,22 +2,50 @@ import type { Feature, Point } from 'geojson';
 import type { Content as ContentType } from '../../shared/utils/type';
 import { Content } from '../../shared/components/Content';
 import { ErrorMessage } from '../../shared/components/ErrorMessage';
-import { useRef } from 'react';
+import { useEffect, useRef, type Dispatch, type SetStateAction } from 'react';
 import { css } from '@emotion/react';
 import { usePage } from '../../shared/hooks/usePage';
 
-interface ClusteredContentListProps { features: Feature<Point>[] }
+interface ClusteredContentListProps {
+  features: Feature<Point>[];
+  setInfoWindowData: Dispatch<SetStateAction<{
+    anchor: google.maps.marker.AdvancedMarkerElement;
+    features: Feature<Point>[];
+    offset: [number, number];
+  } | null>>;
+}
 
-const CONTENT_COUNT_PER_PAGE = 10;
+const CONTENT_COUNT_PER_PAGE = 5;
 
-export const ClusteredContentList = ({ features }: ClusteredContentListProps) => {
-  const scrollRef = useRef<HTMLUListElement>(null);
+export const ClusteredContentList = ({ features, setInfoWindowData }: ClusteredContentListProps) => {
+  const containerRef = useRef<HTMLUListElement>(null);
 
   const { currentPageData, paginationElement } = usePage({
     data: features,
     dataAmountPerPage: CONTENT_COUNT_PER_PAGE,
-    scrollRef,
+    scrollRef: containerRef,
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const margin = 64;
+      const overflowedAmount = -(rect.y - margin);
+
+      if (overflowedAmount > 0) {
+        setInfoWindowData((prev) => prev
+          ? {
+            ...prev,
+            offset: [0, overflowedAmount],
+          }
+          : null);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (features.length === 0) return (
     <ErrorMessage
@@ -29,12 +57,12 @@ export const ClusteredContentList = ({ features }: ClusteredContentListProps) =>
   return (
     <>
       <ul
-        ref={scrollRef}
+        ref={containerRef}
         css={css`
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
-          max-height: 24rem;
+          max-height: 26.5rem;
           overflow-y: auto;
           padding-right: 0.75rem;
         `}

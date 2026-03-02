@@ -11,6 +11,7 @@ interface ClusteredMarkersProps {
   setInfoWindowData: Dispatch<SetStateAction<{
     anchor: google.maps.marker.AdvancedMarkerElement;
     features: Feature<Point>[];
+    offset: [number, number];
   } | null>>;
 }
 
@@ -42,6 +43,7 @@ export const ClusteredMarkers = ({ geojson, setInfoWindowData }: ClusteredMarker
         return {
           anchor: marker,
           features: sortedLeaves,
+          offset: [0, 0],
         };
       });
     },
