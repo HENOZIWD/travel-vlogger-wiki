@@ -1,11 +1,10 @@
-import { useCallback, type Dispatch } from 'react';
+import { useCallback, type Dispatch, type SetStateAction } from 'react';
 import Supercluster, { type ClusterProperties } from 'supercluster';
 import type { Feature, FeatureCollection, GeoJsonProperties, Point } from 'geojson';
 import { useSupercluster } from '../hooks/useSupercluster';
 import { Marker } from './Marker';
 import { Cluster } from './Cluster';
 import type { Content } from '../../shared/utils/type';
-import type { SetStateAction } from 'jotai';
 
 interface ClusteredMarkersProps {
   geojson: FeatureCollection<Point>;
