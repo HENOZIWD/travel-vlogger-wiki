@@ -1,19 +1,18 @@
-import { useCallback } from 'react';
+import { useCallback, type Dispatch } from 'react';
 import Supercluster, { type ClusterProperties } from 'supercluster';
 import type { Feature, FeatureCollection, GeoJsonProperties, Point } from 'geojson';
 import { useSupercluster } from '../hooks/useSupercluster';
 import { Marker } from './Marker';
 import { Cluster } from './Cluster';
 import type { Content } from '../../shared/utils/type';
+import type { SetStateAction } from 'jotai';
 
 interface ClusteredMarkersProps {
   geojson: FeatureCollection<Point>;
-  setInfoWindowData: (
-    data: {
-      anchor: google.maps.marker.AdvancedMarkerElement;
-      features: Feature<Point>[];
-    } | null,
-  ) => void;
+  setInfoWindowData: Dispatch<SetStateAction<{
+    anchor: google.maps.marker.AdvancedMarkerElement;
+    features: Feature<Point>[];
+  } | null>>;
 }
 
 const superclusterOptions: Supercluster.Options<
@@ -30,17 +29,21 @@ export const ClusteredMarkers = ({ geojson, setInfoWindowData }: ClusteredMarker
 
   const handleClusterClick = useCallback(
     (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
-      const leaves = getLeaves(clusterId);
+      setInfoWindowData((prev) => {
+        if (prev !== null) return null;
 
-      const sortedLeaves = [...leaves].sort((a, b) =>
-        (b.properties as Content).publishedAt > (a.properties as Content).publishedAt
-          ? 1
-          : -1,
-      );
+        const leaves = getLeaves(clusterId);
 
-      setInfoWindowData({
-        anchor: marker,
-        features: sortedLeaves,
+        const sortedLeaves = [...leaves].sort((a, b) =>
+          (b.properties as Content).publishedAt > (a.properties as Content).publishedAt
+            ? 1
+            : -1,
+        );
+
+        return {
+          anchor: marker,
+          features: sortedLeaves,
+        };
       });
     },
     [getLeaves, setInfoWindowData],
