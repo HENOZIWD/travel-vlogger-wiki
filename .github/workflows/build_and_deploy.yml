@@ -1,6 +1,9 @@
 # GitHub Pages를 통해 정적 콘텐츠를 배포하는 간단한 워크플로우
 name: Deploy static content to Pages
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   release:
     types: [published]
