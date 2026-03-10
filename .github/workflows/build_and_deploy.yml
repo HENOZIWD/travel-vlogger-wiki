@@ -1,6 +1,9 @@
 # GitHub Pages를 통해 정적 콘텐츠를 배포하는 간단한 워크플로우
 name: Deploy static content to Pages
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   release:
     types: [published]
@@ -38,7 +41,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          cp ./dist/index.html ./dist/404.html
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
           VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
