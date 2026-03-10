@@ -4,6 +4,7 @@ import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { searchContents } from '../apis/searchContents';
 import { useSearchParams } from 'react-router';
 import { useScrollRestoration } from '../hook/useScrollRestoration';
+import { css } from '@emotion/react';
 
 export const SearchContentResult = () => {
   const [searchParams] = useSearchParams();
@@ -21,7 +22,7 @@ export const SearchContentResult = () => {
     getNextPageParam: (lastpage) => lastpage.nextCursor,
   });
 
-  const scrollRef = useScrollRestoration<HTMLUListElement>();
+  const scrollRef = useScrollRestoration<HTMLUListElement>(`searchContent-${q}-${tags}`);
 
   const flattedData = data.pages.flatMap((page) => page.data);
 
@@ -45,7 +46,13 @@ export const SearchContentResult = () => {
         {flattedData.length === 0
           ? <div>검색 결과가 없습니다.</div>
           : (
-            <ul ref={scrollRef}>
+            <ul
+              ref={scrollRef}
+              css={css`
+                height: calc(100% - 64px);
+                overflow-y: auto;
+              `}
+            >
               {flattedData.map((content) => (
                 <li key={content.id}>
                   <Content data={content} />

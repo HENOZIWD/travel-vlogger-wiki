@@ -60,6 +60,7 @@ export const ContentList = () => {
   const [infoWindowData, setInfoWindowData] = useState<{
     anchor: google.maps.marker.AdvancedMarkerElement;
     features: Feature<Point>[];
+    offset: [number, number];
   } | null>(null);
 
   const geojson = useMemo<FeatureCollection<Point>>(() => {
@@ -106,9 +107,14 @@ export const ContentList = () => {
             anchor={infoWindowData.anchor}
             onClose={() => setInfoWindowData(null)}
             ariaLabel="콘텐츠 목록"
+            pixelOffset={infoWindowData.offset}
+            disableAutoPan
           >
             <ErrorBoundary>
-              <ClusteredContentList features={infoWindowData.features} />
+              <ClusteredContentList
+                features={infoWindowData.features}
+                setInfoWindowData={setInfoWindowData}
+              />
             </ErrorBoundary>
           </InfoWindow>
         )
