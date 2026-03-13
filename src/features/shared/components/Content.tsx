@@ -3,6 +3,8 @@ import type { Content as ContentType } from '../utils/type';
 import { Link } from 'react-router';
 import { ChannelThumbnail } from './ChannelThumbnail';
 import { css } from '@emotion/react';
+import { EyeOpenIcon, HeartIcon } from '@radix-ui/react-icons';
+import { formatNumber } from '../utils/format';
 
 interface ContentProps { data: ContentType }
 
@@ -33,6 +35,35 @@ export const Content = ({ data }: ContentProps) => {
               </li>
             ))}
           </ul>
+        )
+        : null}
+      {data.viewCount !== undefined && data.likeCount !== undefined
+        ? (
+          <div css={css`
+          display: flex;
+          gap: 0.125rem;
+          font-size: 0.75rem;
+          align-items: center;
+        `}
+          >
+            <EyeOpenIcon
+              width="0.75rem"
+              height="0.75rem"
+            />
+            <div css={css`
+                margin-right: 0.25rem;
+              `}
+            >
+              {formatNumber(Number(data.viewCount))}
+            </div>
+            <HeartIcon
+              width="0.75rem"
+              height="0.75rem"
+            />
+            <div>
+              {formatNumber(Number(data.likeCount))}
+            </div>
+          </div>
         )
         : null}
       <Flex
