@@ -24,7 +24,7 @@ export const SearchContentResult = () => {
     getNextPageParam: (lastpage) => lastpage.nextCursor,
   });
 
-  const scrollRef = useScrollRestoration<HTMLUListElement>(`searchContent-${q}-${tags}`);
+  const scrollRef = useScrollRestoration<HTMLUListElement>(`searchContent-${q}-${tags}-${sort}`);
 
   const flattedData = data.pages.flatMap((page) => page.data);
 
