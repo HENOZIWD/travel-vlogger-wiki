@@ -14,5 +14,7 @@ export interface Content {
   };
   title: string;
   tags: Tag[];
+  viewCount?: string;
+  likeCount?: string;
   publishedAt: string;
 }

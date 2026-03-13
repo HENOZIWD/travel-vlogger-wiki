@@ -9,7 +9,7 @@ import { useMap } from '@vis.gl/react-google-maps';
 import { useEffect } from 'react';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { css } from '@emotion/react';
-import { formatNumber } from '../utils/format';
+import { formatNumber } from '../../shared/utils/format';
 
 export const ContentDetail = () => {
   const { contentId } = useParams();

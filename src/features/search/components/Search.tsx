@@ -48,8 +48,8 @@ export const Search = () => {
     if (!trimmedQuery && tags.length === 0) return;
 
     const searchParams = new URLSearchParams();
-    if (trimmedQuery) searchParams.append('q', trimmedQuery);
-    if (tags.length > 0) searchParams.append('tags', tags.map(({ id }) => id).join(','));
+    if (trimmedQuery) searchParams.set('q', trimmedQuery);
+    if (tags.length > 0) searchParams.set('tags', tags.map(({ id }) => id).join(','));
 
     setOpen(false);
     navigate(`/search?${searchParams.toString()}`);
