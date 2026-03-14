@@ -61,7 +61,7 @@ export const SearchContentResult = () => {
             return prev;
           })}
         >
-          <Select.Trigger />
+          <Select.Trigger aria-label="정렬 방식 선택" />
           <Select.Content
             css={css`
               width: fit-content;

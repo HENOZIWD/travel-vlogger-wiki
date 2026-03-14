@@ -16,7 +16,7 @@ export const Content = ({ data }: ContentProps) => {
     >
       <Link to={`/content/${data.id}`}>
         <Heading
-          as="h3"
+          as="h2"
           size="3"
         >
           {data.title}
@@ -49,6 +49,7 @@ export const Content = ({ data }: ContentProps) => {
             <EyeOpenIcon
               width="0.75rem"
               height="0.75rem"
+              aria-label="조회수"
             />
             <div css={css`
                 margin-right: 0.25rem;
@@ -59,6 +60,7 @@ export const Content = ({ data }: ContentProps) => {
             <HeartIcon
               width="0.75rem"
               height="0.75rem"
+              aria-label="좋아요 수"
             />
             <div>
               {formatNumber(Number(data.likeCount))}
