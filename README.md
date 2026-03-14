@@ -1,73 +1,27 @@
-# React + TypeScript + Vite
+<img width="2119" height="1085" alt="애플리케이션 화면" src="https://github.com/user-attachments/assets/ed0aa21c-700e-4133-9e23-e1578f5cdc5b" />
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 여기갔니? - 여행 유튜브 위키
 
-Currently, two official plugins are available:
+여행 유튜버들이 방문한 여행 장소를 지도에서 한눈에 살펴보세요!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+내가 몰랐던 특별한 여행지를 발견하고 나만 알고 있던 재미있는 여행 유튜브 콘텐츠를 공유해보세요!
 
-## React Compiler
+## 주요 기능
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 지도 기반 콘텐츠 위키
+- **Google Maps API**를 활용하여 여행 유튜버들이 방문한 실제 위치를 지도 상의 마커로 확인 가능합니다.
+- 모든 콘텐츠는 사용자가 **자유롭게 수정 및 조회할 수 있는 위키 형태**입니다.
+- **범위 기반 검색 기능**을 통해 원하는 지역의 콘텐츠를 검색할 수 있습니다.
+- **마커 클러스터링 기능**을 통해 대량의 콘텐츠 데이터도 지도 상에 효과적으로 시각화합니다.
 
-## Expanding the ESLint configuration
+### AI 개요 생성
+- **Gemini API**를 통해 동영상을 분석하여 콘텐츠의 대략적인 내용을 요약 제공합니다.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 콘텐츠 자동 등록
+- **Youtube Data API**를 통해 유튜브 채널의 동영상 목록을 가져와 각 동영상의 자막 데이터를 수집합니다.
+- **Gemini API**를 활용하여 자막 내에서 여행 장소와 관련된 키워드를 자동으로 추출합니다.
+- 추출된 키워드는 **OpenStreetMap Nominatim API**를 거쳐 정확한 경위도 좌표로 변환되어 동영상 콘텐츠와 함께 등록됩니다.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 다중 조건 검색 및 정렬
+- **유튜브 채널 명, 콘텐츠 제목 및 태그를 조합 검색**하여 원하는 여행 영상을 쉽게 찾을 수 있습니다.
+- 검색 결과는 최신순, 조회수 높은 순, 좋아요 높은 순 등으로 **정렬하여 제공**합니다.
