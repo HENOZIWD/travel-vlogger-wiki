@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Select } from '@radix-ui/themes';
+import { Button, Flex, Heading, Select, Text } from '@radix-ui/themes';
 import { Content } from '../../shared/components/Content';
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { searchContents } from '../apis/searchContents';
@@ -47,7 +47,12 @@ export const SearchContentResult = () => {
           padding-right: 0.5rem;
         `}
       >
-        <div>정렬</div>
+        <Text
+          as="div"
+          size="2"
+        >
+          정렬
+        </Text>
         <Select.Root
           key={sort}
           defaultValue={sort ?? 'latest'}
@@ -56,7 +61,7 @@ export const SearchContentResult = () => {
             return prev;
           })}
         >
-          <Select.Trigger />
+          <Select.Trigger aria-label="정렬 방식 선택" />
           <Select.Content
             css={css`
               width: fit-content;
