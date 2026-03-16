@@ -43,6 +43,10 @@ export const Marker = ({ position, data }: MarkerProps) => {
             color: var(--gray-12);
             font-size: 0.875rem;
             font-weight: var(--marker-font-weight);
+            max-width: 5rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
           `}
         >
           {data.channel.title}
